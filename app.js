@@ -485,7 +485,7 @@ function showScreen(name){
 //  VOICE
 // ═══════════════════════════════════════════════════
 let recognition=null,voiceActive=false,lastVoiceCmd=0;
-const VOICE_CONFIDENCE=0.5; // any speech above this triggers the current action
+const VOICE_CONFIDENCE=0.3; // any speech above this triggers the current action
 const GO_WORDS=/\b(go|start|begin|hang|now|ready)\b/;
 const STOP_WORDS=/\b(stop|end|done|finish|drop|down)\b/;
 function voiceDispatch(label){
