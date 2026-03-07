@@ -9,13 +9,15 @@ const DEFAULTS = {
   startSecL1:8, startSecL2:5, startRepsL3:1,
   stepSec:2, daysPerStep:7, minHangsPerDay:2,
   graceDays:1, penaltySec:2,
-  levelupThreshL1:30, levelupThreshL2:20
+  levelupThreshL1:30, levelupThreshL2:20,
+  delayStart:5, autoStop:true
 };
 const LIMITS = {
   startSecL1:[2,60], startSecL2:[2,60], startRepsL3:[1,20],
   stepSec:[1,10], daysPerStep:[1,30], minHangsPerDay:[1,10],
   graceDays:[0,7], penaltySec:[0,10],
-  levelupThreshL1:[10,120], levelupThreshL2:[10,120]
+  levelupThreshL1:[10,120], levelupThreshL2:[10,120],
+  delayStart:[0,30]
 };
 
 function getSessions(){ try{ return JSON.parse(localStorage.getItem(SESSIONS_KEY))||[]; }catch{ return []; } }
@@ -73,11 +75,13 @@ function computeProgression(sessions, s, level) {
 const RING_C = 2*Math.PI*108;
 let running=false, startTime=null, elapsed=0, raf=null, lastDur=null;
 let currentReps=0;  // for level 3
+let countdownActive=false, countdownTimer=null;
 
 function getActiveLevel(){ return getState().level; }
 function getLevelColor(l){ return LEVEL_COLORS[l]; }
 
 function handleTap(){
+  if (countdownActive) { cancelCountdown(); return; }
   const lvl = getActiveLevel();
   if (lvl===3) { /* rep counter — tap does nothing for timing */ return; }
   running ? stopTimer() : startTimer();
@@ -90,6 +94,7 @@ function startTimer(){
   document.getElementById('tap-btn').classList.add('running');
   document.getElementById('post-timer').classList.remove('visible');
   document.getElementById('ring').classList.remove('paused');
+  document.getElementById('tap-delay').classList.add('hidden');
   tick();
 }
 
@@ -103,11 +108,76 @@ function stopTimer(){
   document.getElementById('presave-sec').textContent=(lastDur/1000).toFixed(1);
   document.getElementById('presave-unit').textContent='seconds';
   document.getElementById('post-timer').classList.add('visible');
+  if(getActiveLevel()!==3) showDelayBtn();
 }
 
 function adjustRep(delta){
   currentReps=Math.max(0, currentReps+delta);
   document.getElementById('rep-num').textContent=currentReps;
+}
+
+function showDelayBtn(){
+  const btn=document.getElementById('tap-delay');
+  btn.classList.remove('hidden');
+  updateDelayBtn();
+}
+
+function updateDelayBtn(){
+  const s=getSettings();
+  const btn=document.getElementById('tap-delay');
+  if(s.delayStart===0){
+    btn.classList.add('hidden');
+  } else {
+    btn.querySelector('.tap-delay-sec').textContent=s.delayStart+'s';
+  }
+}
+
+function toggleAutoStop(){
+  const s=getSettings(); s.autoStop=!s.autoStop; saveSettings(s); renderSettings(s);
+}
+
+function handleDelayedStart(){
+  if(countdownActive){ cancelCountdown(); return; }
+  if(running){ stopTimer(); return; }
+  startCountdown(getSettings().delayStart);
+}
+
+function startCountdown(secs){
+  countdownActive=true;
+  let remaining=secs;
+  const secEl=document.getElementById('timer-sec');
+  const msEl=document.getElementById('timer-ms');
+  secEl.classList.add('countdown');
+  secEl.textContent='-'+remaining;
+  msEl.textContent='.0';
+  document.getElementById('tap-btn').textContent='Cancel';
+  document.getElementById('tap-delay').classList.add('hidden');
+  document.getElementById('ring').classList.add('paused');
+  countdownTimer=setInterval(()=>{
+    remaining--;
+    if(remaining>0){
+      secEl.textContent='-'+remaining;
+    } else {
+      secEl.textContent='0';
+      secEl.classList.remove('countdown');
+      clearInterval(countdownTimer); countdownTimer=null;
+      countdownActive=false;
+      if(getActiveLevel()!==3) showDelayBtn();
+      startTimer();
+    }
+  },1000);
+}
+
+function cancelCountdown(){
+  if(!countdownActive) return;
+  clearInterval(countdownTimer); countdownTimer=null;
+  countdownActive=false;
+  const secEl=document.getElementById('timer-sec');
+  secEl.classList.remove('countdown');
+  secEl.textContent='0';
+  document.getElementById('timer-ms').textContent='.0';
+  document.getElementById('tap-btn').textContent='Start Hang';
+  if(getActiveLevel()!==3) showDelayBtn();
 }
 
 function saveRepSession(){
@@ -134,6 +204,7 @@ function tick(){
     ring.classList.remove('over-target');
     ov.style.opacity='0'; ov.style.strokeDashoffset=RING_C;
   } else {
+    if(getSettings().autoStop){ stopTimer(); showToast('Target reached!'); return; }
     ring.style.strokeDashoffset='0';
     ring.classList.add('over-target');
     const op=Math.min((totalSec-target)/target,1);
@@ -205,9 +276,11 @@ function applyLevelTheme(lvl){
   if(isRep){
     document.getElementById('tap-btn').textContent='Save reps';
     document.getElementById('tap-btn').onclick=saveRepSession;
+    document.getElementById('tap-delay').classList.add('hidden');
   } else {
     document.getElementById('tap-btn').textContent='Start Hang';
     document.getElementById('tap-btn').onclick=handleTap;
+    if(!running&&!countdownActive) showDelayBtn();
   }
   // level buttons in settings
   [1,2,3].forEach(n=>{
@@ -273,6 +346,7 @@ function refreshTimerUI(){
 
   applyLevelTheme(lvl);
   checkLevelUpSuggestion();
+  if(lvl!==3&&!running&&!countdownActive) updateDelayBtn();
 }
 
 // ═══════════════════════════════════════════════════
@@ -286,6 +360,8 @@ function adj(key,delta){
 
 function renderSettings(s){
   Object.keys(DEFAULTS).forEach(k=>{ const el=document.getElementById('sv-'+k); if(el) el.textContent=s[k]; });
+  const asBtn=document.getElementById('toggle-autostop');
+  if(asBtn){ asBtn.textContent=s.autoStop?'On':'Off'; asBtn.classList.toggle('toggle-on',!!s.autoStop); }
   const lvl=getActiveLevel();
   const prog=computeProgression(getSessions(),s,lvl);
   document.getElementById('sp-level').textContent=`${lvl} — ${LEVEL_NAMES[lvl]}`;
@@ -297,6 +373,7 @@ function renderSettings(s){
   document.getElementById('sp-bar-label').textContent=
     `${prog.daysIntoStep} / ${s.daysPerStep} qualifying days → next +${s.stepSec}${unit}`;
   [1,2,3].forEach(n=>{ document.getElementById(`lvl-btn-${n}`).classList.toggle('active-level',n===lvl); });
+  updateDelayBtn();
 }
 
 // ═══════════════════════════════════════════════════
@@ -490,7 +567,7 @@ const VOICE_THRESHOLD=0.4;
 function voiceDispatch(word){
   const now=Date.now();if(now-lastVoiceCmd<1500)return;
   if(getActiveLevel()===3)return;
-  if(word==='go'&&!running){lastVoiceCmd=now;handleTap();setMic('listening','✓ go');setTimeout(()=>setMic('listening','Say "go" or "stop"…'),800);}
+  if(word==='go'&&!running&&!countdownActive){lastVoiceCmd=now;handleTap();setMic('listening','✓ go');setTimeout(()=>setMic('listening','Say "go" or "stop"…'),800);}
   else if(word==='stop'&&running){lastVoiceCmd=now;handleTap();setMic('listening','✓ stop');setTimeout(()=>setMic('listening','Say "go" or "stop"…'),800);}
 }
 

@@ -89,11 +89,20 @@ body.lvl-3 .ring-fill.over-target{stroke:#fff}
 #mic-status.error .mic-text{color:var(--danger)}
 
 /* tap btn */
-#tap-btn{width:100%;max-width:300px;padding:20px;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:transform 0.1s,background 0.2s;background:var(--accent);color:#0a0a0a;margin-bottom:14px}
-#tap-btn:active{transform:scale(0.96)}
+#tap-btn-wrap{display:flex;width:100%;max-width:300px;border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:transform 0.1s}
+#tap-btn-wrap:active{transform:scale(0.96)}
+#tap-btn{flex:1;padding:20px;border:none;border-radius:0;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;background:var(--accent);color:#0a0a0a;margin-bottom:0;width:auto;max-width:none}
 #tap-btn.running{background:var(--danger);color:#fff}
+#tap-delay{width:62px;padding:0;border:none;border-left:2px solid rgba(0,0,0,0.15);background:var(--accent);color:#0a0a0a;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0;transition:background 0.2s,filter 0.15s;user-select:none;-webkit-user-select:none}
+#tap-delay:active{filter:brightness(0.85)}
+#tap-delay.hidden{display:none}
+.tap-delay-sec{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.04em;line-height:1}
+.tap-delay-lbl{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.65}
 body.lvl-2 #tap-btn{background:var(--l2)}
+body.lvl-2 #tap-delay{background:var(--l2)}
 body.lvl-3 #tap-btn{background:var(--l3)}
+body.lvl-3 #tap-delay{background:var(--l3)}
+#timer-sec.countdown{color:var(--muted)}
 
 /* post-timer */
 #save-btn,#discard-btn{width:100%;max-width:300px;padding:14px;border-radius:var(--radius);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;cursor:pointer;border:1px solid var(--border);transition:background 0.15s,transform 0.1s}
@@ -201,6 +210,9 @@ body.lvl-3 #tap-btn{background:var(--l3)}
 .adj-btn:active{background:var(--border)}
 .backup-btn{padding:9px 16px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer;flex-shrink:0;transition:background 0.15s}
 .backup-btn:active{background:var(--border)}
+.toggle-btn{padding:9px 16px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer;flex-shrink:0;transition:all 0.15s;min-width:48px}
+.toggle-btn.toggle-on{background:var(--surface);border-color:var(--accent-dim);color:var(--accent)}
+.toggle-btn:active{opacity:0.8}
 .level-switch-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
 .level-switch-row:last-child{border-bottom:none}
 .level-btn{padding:8px 16px;border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--muted);transition:all 0.15s}

@@ -77,7 +77,13 @@
       <div class="mic-text" id="mic-text">Voice off</div>
     </div>
 
-    <button id="tap-btn" onclick="handleTap()">Start Hang</button>
+    <div id="tap-btn-wrap">
+      <button id="tap-btn" onclick="handleTap()">Start Hang</button>
+      <button id="tap-delay" onclick="handleDelayedStart()">
+        <span class="tap-delay-sec">5s</span>
+        <span class="tap-delay-lbl">delay</span>
+      </button>
+    </div>
 
     <div class="post-timer" id="post-timer">
       <div class="presave-editor">
@@ -175,6 +181,22 @@
           <button class="level-btn" id="lvl-btn-2" onclick="switchLevel(2)">L2</button>
           <button class="level-btn" id="lvl-btn-3" onclick="switchLevel(3)">L3</button>
         </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Timer</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Delayed start</div><div class="setting-desc">Countdown before timer starts — tap the right side of the Start button. Set to 0 to disable.</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('delayStart',-1)">−</button>
+          <div><div class="setting-val" id="sv-delayStart">5</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('delayStart',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Auto-stop at target</div><div class="setting-desc">Automatically stop the timer when the target time is reached</div></div>
+        <button class="toggle-btn toggle-on" id="toggle-autostop" onclick="toggleAutoStop()">On</button>
       </div>
     </div>
 
