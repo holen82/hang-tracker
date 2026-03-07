@@ -485,7 +485,7 @@ function showScreen(name){
 //  VOICE (TF.js Speech Commands — offline-capable)
 // ═══════════════════════════════════════════════════
 let scRecognizer=null,voiceActive=false,lastVoiceCmd=0,scLoading=false;
-const VOICE_THRESHOLD=0.85;
+const VOICE_THRESHOLD=0.4;
 
 function voiceDispatch(word){
   const now=Date.now();if(now-lastVoiceCmd<1500)return;
