@@ -482,43 +482,54 @@ function showScreen(name){
 }
 
 // ═══════════════════════════════════════════════════
-//  VOICE
+//  VOICE (TF.js Speech Commands — offline-capable)
 // ═══════════════════════════════════════════════════
-let recognition=null,voiceActive=false,lastVoiceCmd=0;
-const VOICE_CONFIDENCE=0.3; // any speech above this triggers the current action
-const GO_WORDS=/\b(go|start|begin|hang|now|ready)\b/;
-const STOP_WORDS=/\b(stop|end|done|finish|drop|down)\b/;
-function voiceDispatch(label){
-  const now=Date.now();if(now-lastVoiceCmd<1000)return;
-  if(!running&&getActiveLevel()!==3){lastVoiceCmd=now;handleTap();setMic('listening','✓ '+label);setTimeout(()=>setMic('listening','Say anything…'),800);}
-  else if(running){lastVoiceCmd=now;handleTap();setMic('listening','✓ '+label);setTimeout(()=>setMic('listening','Say anything…'),800);}
+let scRecognizer=null,voiceActive=false,lastVoiceCmd=0,scLoading=false;
+const VOICE_THRESHOLD=0.85;
+
+function voiceDispatch(word){
+  const now=Date.now();if(now-lastVoiceCmd<1500)return;
+  if(getActiveLevel()===3)return;
+  if(word==='go'&&!running){lastVoiceCmd=now;handleTap();setMic('listening','✓ go');setTimeout(()=>setMic('listening','Say "go" or "stop"…'),800);}
+  else if(word==='stop'&&running){lastVoiceCmd=now;handleTap();setMic('listening','✓ stop');setTimeout(()=>setMic('listening','Say "go" or "stop"…'),800);}
 }
-function toggleVoice(){if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){setMic('error','Not supported');return;}voiceActive?stopVoice():startVoice();}
-function startVoice(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SR();recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-US';recognition.maxAlternatives=5;
-  recognition.onstart=()=>{voiceActive=true;setMic('listening','Say anything…');};
-  recognition.onresult=(e)=>{
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      const result=e.results[i];
-      if(result.isFinal){
-        // Final result: trigger on any speech above confidence threshold — state determines the action
-        for(let j=0;j<result.length;j++){
-          const alt=result[j];if(alt.confidence>=VOICE_CONFIDENCE){voiceDispatch(alt.transcript.trim()||'heard');return;}
-        }
-      } else {
-        // Interim result: no confidence score, fall back to word matching for speed
-        const w=result[0].transcript.trim().toLowerCase();
-        if(GO_WORDS.test(w)&&!running&&getActiveLevel()!==3)voiceDispatch(w);
-        else if(STOP_WORDS.test(w)&&running)voiceDispatch(w);
-      }
+
+function toggleVoice(){voiceActive?stopVoice():startVoice();}
+
+async function startVoice(){
+  if(scLoading)return;
+  if(!window.speechCommands){setMic('error','Not available');return;}
+  scLoading=true;
+  setMic('listening','Loading…');
+  try{
+    if(!scRecognizer){
+      scRecognizer=window.speechCommands.create('BROWSER_FFT');
+      await scRecognizer.ensureModelLoaded();
     }
-  };
-  recognition.onerror=(e)=>{if(e.error==='not-allowed'){setMic('error','Mic blocked');voiceActive=false;}else if(e.error!=='no-speech'&&voiceActive)setTimeout(()=>{try{recognition.start();}catch(_){}},300);};
-  recognition.onend=()=>{if(voiceActive)setTimeout(()=>{try{recognition.start();}catch(_){}},150);else setMic('off','Voice off');};
-  try{recognition.start();}catch(e){setMic('error','Error');}
+    const labels=scRecognizer.wordLabels();
+    const goIdx=labels.indexOf('go'),stopIdx=labels.indexOf('stop');
+    await scRecognizer.listen(result=>{
+      const scores=Array.from(result.scores);
+      const goScore=goIdx>=0?scores[goIdx]:0;
+      const stopScore=stopIdx>=0?scores[stopIdx]:0;
+      if(goScore>=VOICE_THRESHOLD&&goScore>=stopScore)voiceDispatch('go');
+      else if(stopScore>=VOICE_THRESHOLD&&stopScore>goScore)voiceDispatch('stop');
+    },{probabilityThreshold:VOICE_THRESHOLD,overlapFactor:0.5});
+    voiceActive=true;
+    setMic('listening','Say "go" or "stop"…');
+  }catch(e){
+    setMic('error','Mic error');
+    voiceActive=false;
+  }
+  scLoading=false;
 }
-function stopVoice(){voiceActive=false;if(recognition){try{recognition.stop();}catch(_){}}setMic('off','Voice off');}
+
+function stopVoice(){
+  voiceActive=false;
+  if(scRecognizer){try{scRecognizer.stopListening();}catch(_){}}
+  setMic('off','Voice off');
+}
+
 function setMic(state,label){document.getElementById('mic-status').className=state==='listening'?'listening':state==='error'?'error':'';document.getElementById('mic-text').textContent=label;}
 
 // ═══════════════════════════════════════════════════

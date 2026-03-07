@@ -1,4 +1,4 @@
-const CACHE = 'hang-v1';
+const CACHE = 'hang-v2';
 
 const APP_SHELL = [
   './',
@@ -33,6 +33,22 @@ self.addEventListener('fetch', event => {
 
   // Only handle GET requests
   if (event.request.method !== 'GET') return;
+
+  // TF.js CDN scripts and model weights — stale-while-revalidate
+  if (url.hostname === 'cdn.jsdelivr.net' || url.hostname === 'storage.googleapis.com') {
+    event.respondWith(
+      caches.open(CACHE).then(cache =>
+        cache.match(event.request).then(cached => {
+          const networkFetch = fetch(event.request).then(response => {
+            if (response && response.status === 200) cache.put(event.request, response.clone());
+            return response;
+          }).catch(() => null);
+          return cached || networkFetch;
+        })
+      )
+    );
+    return;
+  }
 
   // Google Fonts — stale-while-revalidate
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
