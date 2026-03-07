@@ -1,4 +1,4 @@
-const CACHE = 'hang-v5';
+const CACHE = 'hang-v6';
 
 const APP_SHELL = [
   './',
@@ -56,7 +56,7 @@ self.addEventListener('fetch', event => {
       caches.open(CACHE).then(cache =>
         cache.match(event.request).then(cached => {
           const networkFetch = fetch(event.request).then(response => {
-            cache.put(event.request, response.clone());
+            if (response && response.status === 200) cache.put(event.request, response.clone());
             return response;
           }).catch(() => null);
           return cached || networkFetch;

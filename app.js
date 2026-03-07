@@ -76,6 +76,7 @@ const RING_C = 2*Math.PI*108;
 let running=false, startTime=null, elapsed=0, raf=null, lastDur=null;
 let currentReps=0;  // for level 3
 let countdownActive=false, countdownTimer=null;
+let _timerTarget=null, _timerAutoStop=false;
 
 function getActiveLevel(){ return getState().level; }
 function getLevelColor(l){ return LEVEL_COLORS[l]; }
@@ -88,6 +89,9 @@ function handleTap(){
 }
 
 function startTimer(){
+  const _s=getSettings();
+  _timerTarget=computeProgression(getSessions(),_s,getActiveLevel()).targetVal;
+  _timerAutoStop=_s.autoStop;
   running=true;
   startTime=performance.now()-elapsed;
   document.getElementById('tap-btn').textContent='Stop';
@@ -100,6 +104,7 @@ function startTimer(){
 
 function stopTimer(){
   running=false;
+  _timerTarget=null; _timerAutoStop=false;
   cancelAnimationFrame(raf);
   lastDur=elapsed;
   document.getElementById('tap-btn').textContent='Start Hang';
@@ -196,15 +201,14 @@ function tick(){
   const s=Math.floor(totalSec), ms=Math.floor((totalSec-s)*10);
   document.getElementById('timer-sec').textContent=s;
   document.getElementById('timer-ms').textContent='.'+ms;
-  const prog=computeProgression(getSessions(),getSettings(),getActiveLevel());
-  const target=prog.targetVal;
+  const target=_timerTarget;
   const ring=document.getElementById('ring'), ov=document.getElementById('ring-overflow');
   if(totalSec<target){
     ring.style.strokeDashoffset=RING_C*(1-totalSec/target);
     ring.classList.remove('over-target');
     ov.style.opacity='0'; ov.style.strokeDashoffset=RING_C;
   } else {
-    if(getSettings().autoStop){ stopTimer(); showToast('Target reached!'); return; }
+    if(_timerAutoStop){ stopTimer(); showToast('Target reached!'); return; }
     ring.style.strokeDashoffset='0';
     ring.classList.add('over-target');
     const op=Math.min((totalSec-target)/target,1);
@@ -414,11 +418,11 @@ function renderHistory(){
       if(d<=today){
         const k=dayKey(d),c=allCounts[k]||0;
         const isPast=firstDay&&d>=firstDay&&d<today;
-        if(c>=s.minHangsPerDay+1)     cell.classList.add('bonus');
-        else if(c>=s.minHangsPerDay)  cell.classList.add('full');
-        else if(c===2)                cell.classList.add('has-2');
-        else if(c===1)                cell.classList.add('has-1');
-        else if(isPast&&c===0)        cell.classList.add('missed');
+        if(c>=s.minHangsPerDay+1)                       cell.classList.add('bonus');
+        else if(c>=s.minHangsPerDay)                    cell.classList.add('full');
+        else if(c>0&&c>=Math.ceil(s.minHangsPerDay/2)) cell.classList.add('has-2');
+        else if(c>0)                                    cell.classList.add('has-1');
+        else if(isPast&&c===0)                          cell.classList.add('missed');
       }
       col.appendChild(cell); d.setDate(d.getDate()+1);
       if(d>today&&r<6){for(let r2=r+1;r2<7;r2++){const e=document.createElement('div');e.className='heatmap-cell';col.appendChild(e);}break;}
@@ -451,7 +455,7 @@ function renderHistory(){
       </div>
       <div class="session-duration">${dispVal}<span>${dispUnit}</span></div>
       <div class="session-dot" style="background:${color}"></div>`;
-    item.addEventListener('click',()=>toggleSessionEdit(realIdx,wrap,sl));
+    item.addEventListener('click',()=>toggleSessionEdit(wrap));
     const actions=document.createElement('div'); actions.className='session-actions';
     actions.dataset.idx=realIdx; actions.dataset.dur=sess.duration; actions.dataset.lvl=sl;
     actions.innerHTML=`
@@ -470,7 +474,7 @@ function renderHistory(){
 }
 
 let _openWrap=null;
-function toggleSessionEdit(idx,wrap){
+function toggleSessionEdit(wrap){
   const actions=wrap.querySelector('.session-actions'), item=wrap.querySelector('.session-item');
   if(_openWrap&&_openWrap!==wrap){_openWrap.querySelector('.session-actions').classList.remove('visible');_openWrap.querySelector('.session-item').classList.remove('editing');resetDeleteBtn(_openWrap.querySelector('.act-btn.delete'));}
   const open=actions.classList.contains('visible');
