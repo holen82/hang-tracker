@@ -484,13 +484,36 @@ function showScreen(name){
 // ═══════════════════════════════════════════════════
 //  VOICE
 // ═══════════════════════════════════════════════════
-let recognition=null,voiceActive=false;
+let recognition=null,voiceActive=false,lastVoiceCmd=0;
+const VOICE_CONFIDENCE=0.5; // any speech above this triggers the current action
+const GO_WORDS=/\b(go|start|begin|hang|now|ready)\b/;
+const STOP_WORDS=/\b(stop|end|done|finish|drop|down)\b/;
+function voiceDispatch(label){
+  const now=Date.now();if(now-lastVoiceCmd<1000)return;
+  if(!running&&getActiveLevel()!==3){lastVoiceCmd=now;handleTap();setMic('listening','✓ '+label);setTimeout(()=>setMic('listening','Say anything…'),800);}
+  else if(running){lastVoiceCmd=now;handleTap();setMic('listening','✓ '+label);setTimeout(()=>setMic('listening','Say anything…'),800);}
+}
 function toggleVoice(){if(!('webkitSpeechRecognition'in window)&&!('SpeechRecognition'in window)){setMic('error','Not supported');return;}voiceActive?stopVoice():startVoice();}
 function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SR();recognition.continuous=true;recognition.interimResults=false;recognition.lang='en-US';recognition.maxAlternatives=3;
-  recognition.onstart=()=>{voiceActive=true;setMic('listening','Say "go"/"stop"');};
-  recognition.onresult=(e)=>{for(let i=e.resultIndex;i<e.results.length;i++){if(!e.results[i].isFinal)continue;for(let j=0;j<e.results[i].length;j++){const w=e.results[i][j].transcript.trim().toLowerCase();if(/\bgo\b/.test(w)&&!running&&getActiveLevel()!==3){handleTap();return;}if(/\bstop\b/.test(w)&&running){handleTap();return;}}}};
+  recognition=new SR();recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-US';recognition.maxAlternatives=5;
+  recognition.onstart=()=>{voiceActive=true;setMic('listening','Say anything…');};
+  recognition.onresult=(e)=>{
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const result=e.results[i];
+      if(result.isFinal){
+        // Final result: trigger on any speech above confidence threshold — state determines the action
+        for(let j=0;j<result.length;j++){
+          const alt=result[j];if(alt.confidence>=VOICE_CONFIDENCE){voiceDispatch(alt.transcript.trim()||'heard');return;}
+        }
+      } else {
+        // Interim result: no confidence score, fall back to word matching for speed
+        const w=result[0].transcript.trim().toLowerCase();
+        if(GO_WORDS.test(w)&&!running&&getActiveLevel()!==3)voiceDispatch(w);
+        else if(STOP_WORDS.test(w)&&running)voiceDispatch(w);
+      }
+    }
+  };
   recognition.onerror=(e)=>{if(e.error==='not-allowed'){setMic('error','Mic blocked');voiceActive=false;}else if(e.error!=='no-speech'&&voiceActive)setTimeout(()=>{try{recognition.start();}catch(_){}},300);};
   recognition.onend=()=>{if(voiceActive)setTimeout(()=>{try{recognition.start();}catch(_){}},150);else setMic('off','Voice off');};
   try{recognition.start();}catch(e){setMic('error','Error');}
@@ -560,5 +583,47 @@ function restoreBackup(event){
 // ═══════════════════════════════════════════════════
 refreshTimerUI();
 
-const _m={name:"Hang Tracker",short_name:"Hang",start_url:".",display:"standalone",background_color:"#0a0a0a",theme_color:"#0a0a0a",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a0a'/><text y='72' x='50' text-anchor='middle' font-size='60' fill='%23c8f542'>↑</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
-const _l=document.createElement('link');_l.rel='manifest';_l.href=URL.createObjectURL(new Blob([JSON.stringify(_m)],{type:'application/json'}));document.head.appendChild(_l);
+// ═══════════════════════════════════════════════════
+//  SERVICE WORKER + UPDATE DETECTION
+// ═══════════════════════════════════════════════════
+let _swWaiting = null;
+
+function applyUpdate() {
+  if (_swWaiting) {
+    _swWaiting.postMessage('SKIP_WAITING');
+    _swWaiting = null;
+  }
+  document.getElementById('update-banner').classList.remove('visible');
+}
+
+function dismissUpdate() {
+  document.getElementById('update-banner').classList.remove('visible');
+}
+
+function _showUpdateBanner(worker) {
+  _swWaiting = worker;
+  document.getElementById('update-banner').classList.add('visible');
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    // Already waiting (e.g. page refreshed while update was pending)
+    if (reg.waiting) {
+      _showUpdateBanner(reg.waiting);
+    }
+
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          _showUpdateBanner(newWorker);
+        }
+      });
+    });
+  }).catch(() => { /* SW unavailable (e.g. file:// protocol) — silent */ });
+
+  // When the new SW takes control, reload so the fresh files are served
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}

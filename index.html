@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hang">
 <title>Hang Tracker</title>
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -368,6 +369,13 @@
   </div>
 </div>
 <div id="toast"></div>
+<div id="update-banner">
+  <span class="update-msg">Update available</span>
+  <div class="update-actions">
+    <button class="update-btn-apply" onclick="applyUpdate()">Reload</button>
+    <button class="update-btn-dismiss" onclick="dismissUpdate()">Later</button>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>
