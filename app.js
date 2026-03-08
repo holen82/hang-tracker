@@ -664,6 +664,11 @@ if ('serviceWorker' in navigator) {
         }
       });
     });
+
+    // Check for updates whenever the user switches back to the app
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') reg.update();
+    });
   }).catch(() => { /* SW unavailable (e.g. file:// protocol) — silent */ });
 
   // When the new SW takes control, reload so the fresh files are served
