@@ -1,6 +1,4 @@
 node_modules/
-/version.js
-
 # Playwright
 /test-results/
 /playwright-report/
