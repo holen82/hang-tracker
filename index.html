@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hang">
+<title>Hang Tracker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@400;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <nav>
+    <button class="active" onclick="showScreen('timer')"   id="nav-timer">Timer</button>
+    <button onclick="showScreen('history')"  id="nav-history">Log</button>
+    <button onclick="showScreen('settings')" id="nav-settings">Settings</button>
+    <button onclick="showScreen('info')"     id="nav-info">Guide</button>
+  </nav>
+
+  <!-- ══ TIMER ══ -->
+  <div id="timer-screen" class="screen active">
+
+    <div id="level-badge">
+      <div class="lvl-dot" id="lvl-dot"></div>
+      <div class="lvl-text" id="lvl-text">Level 1 — Passive Hang</div>
+    </div>
+
+    <div id="levelup-banner">
+      <div class="banner-title" id="banner-title">Ready to level up?</div>
+      <div class="banner-sub"  id="banner-sub">You've been consistently hitting your target. Time to move to the next stage.</div>
+      <div class="banner-btns">
+        <button class="banner-btn yes" onclick="confirmLevelUp()">Level up</button>
+        <button class="banner-btn no"  onclick="dismissLevelUp()">Not yet</button>
+      </div>
+    </div>
+
+    <div id="today-bar">
+      <div class="today-track"><div class="today-fill" id="today-fill" style="width:0%"></div></div>
+      <div class="today-label">
+        <span id="today-count-label">0 sessions today</span>
+        <span id="bonus-spark"></span>
+        <span id="today-target-label">target: —</span>
+      </div>
+    </div>
+
+    <!-- Ring (levels 1 & 2) -->
+    <div class="timer-ring" id="timer-ring">
+      <svg width="240" height="240" viewBox="0 0 240 240">
+        <circle class="ring-bg"       cx="120" cy="120" r="108" fill="none" stroke-width="6"/>
+        <circle class="ring-fill"     id="ring"          cx="120" cy="120" r="108" fill="none" stroke-width="6" stroke-dasharray="678.6" stroke-dashoffset="678.6"/>
+        <circle class="ring-overflow" id="ring-overflow" cx="120" cy="120" r="108" fill="none" stroke-width="6" stroke-dasharray="678.6" stroke-dashoffset="678.6" style="opacity:0"/>
+      </svg>
+      <div class="timer-display">
+        <div class="timer-seconds" id="timer-sec">0</div>
+        <div class="timer-ms"      id="timer-ms">.0</div>
+        <div class="timer-target-lbl" id="timer-target-lbl">target — s</div>
+      </div>
+    </div>
+
+    <!-- Rep counter (level 3) -->
+    <div id="rep-counter">
+      <div class="rep-num" id="rep-num">0</div>
+      <div class="rep-target-lbl" id="rep-target-lbl">target — reps</div>
+      <div class="rep-btns">
+        <button class="rep-adj" onclick="adjustRep(-1)">−</button>
+        <button class="rep-adj" onclick="adjustRep(1)">+</button>
+      </div>
+    </div>
+
+    <div id="mic-status" onclick="toggleVoice()">
+      <div class="mic-dot"></div>
+      <div class="mic-text" id="mic-text">Voice off</div>
+    </div>
+
+    <div id="tap-btn-wrap">
+      <button id="tap-btn" onclick="handleTap()">Start Hang</button>
+      <button id="tap-delay" onclick="handleDelayedStart()">
+        <span class="tap-delay-sec">5s</span>
+        <span class="tap-delay-lbl">delay</span>
+      </button>
+    </div>
+
+    <div class="post-timer" id="post-timer">
+      <div class="presave-editor">
+        <button class="presave-adj" onclick="adjustPresave(-1)">−</button>
+        <div>
+          <div class="presave-sec" id="presave-sec">0.0</div>
+          <div class="presave-unit" id="presave-unit">seconds</div>
+        </div>
+        <button class="presave-adj" onclick="adjustPresave(1)">+</button>
+      </div>
+      <div class="presave-hint">tap ± to adjust if needed</div>
+      <button id="save-btn"    onclick="saveSession()">Save this session</button>
+      <button id="discard-btn" onclick="discardSession()">Discard</button>
+    </div>
+  </div>
+
+  <!-- ══ LOG ══ -->
+  <div id="history-screen" class="screen">
+    <div>
+      <div class="section-title">Overview</div>
+      <div class="stats-row" id="stats-row"></div>
+    </div>
+    <div>
+      <div class="section-title">Activity</div>
+      <div style="display:flex;align-items:flex-start;">
+        <div class="heatmap-day-labels" id="day-labels"></div>
+        <div style="flex:1;overflow:hidden;">
+          <div class="heatmap-months" id="month-labels"></div>
+          <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-header">
+        <div class="section-title">Recent Sessions</div>
+        <button class="add-btn" onclick="toggleAddPanel()" title="Add session manually">+</button>
+      </div>
+      <div id="add-session-panel">
+        <div class="add-panel-title">Add session manually</div>
+        <div class="add-row">
+          <span class="add-row-label">Level</span>
+          <select id="add-level" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text);flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;outline:none;color-scheme:dark;">
+            <option value="1">1 — Passive hang</option>
+            <option value="2">2 — Active hang</option>
+            <option value="3">3 — Scapular shrugs</option>
+          </select>
+        </div>
+        <div class="add-row">
+          <span class="add-row-label" id="add-dur-label">Duration</span>
+          <button class="add-adj" onclick="addAdj(-1)">−</button>
+          <div><div class="add-val" id="add-dur-val">8.0</div><div class="add-unit" id="add-dur-unit">sec</div></div>
+          <button class="add-adj" onclick="addAdj(1)">+</button>
+        </div>
+        <div class="add-row">
+          <span class="add-row-label">When</span>
+          <input type="datetime-local" id="add-datetime" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text);flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;outline:none;color-scheme:dark;">
+        </div>
+        <div class="add-panel-btns">
+          <button class="add-panel-btn ok"     onclick="confirmAddSession()">Add to log</button>
+          <button class="add-panel-btn cancel" onclick="toggleAddPanel()">Cancel</button>
+        </div>
+      </div>
+      <div class="session-list" id="session-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS ══ -->
+  <div id="settings-screen" class="screen">
+    <div id="prog-card">
+      <div class="prog-row">
+        <span class="prog-key">Current level</span>
+        <span class="prog-val accent" id="sp-level">—</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-key">Today's target</span>
+        <span class="prog-val accent" id="sp-target">—</span>
+      </div>
+      <div class="prog-row">
+        <span class="prog-key">Qualifying days (this level)</span>
+        <span class="prog-val" id="sp-qual-days">—</span>
+      </div>
+      <div class="prog-bar-wrap">
+        <div class="prog-bar-track"><div class="prog-bar-fill" id="sp-bar" style="width:0%"></div></div>
+        <div class="prog-bar-label" id="sp-bar-label">…</div>
+      </div>
+    </div>
+
+    <!-- Level selector -->
+    <div class="settings-group">
+      <div class="settings-group-title">Active level</div>
+      <div class="level-switch-row">
+        <span style="font-size:12px;color:var(--muted)">Switch level manually</span>
+        <div style="display:flex;gap:6px">
+          <button class="level-btn" id="lvl-btn-1" onclick="switchLevel(1)">L1</button>
+          <button class="level-btn" id="lvl-btn-2" onclick="switchLevel(2)">L2</button>
+          <button class="level-btn" id="lvl-btn-3" onclick="switchLevel(3)">L3</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Timer</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Delayed start</div><div class="setting-desc">Countdown before timer starts — tap the right side of the Start button. Set to 0 to disable.</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('delayStart',-1)">−</button>
+          <div><div class="setting-val" id="sv-delayStart">5</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('delayStart',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Auto-stop at target</div><div class="setting-desc">Automatically stop the timer when the target time is reached</div></div>
+        <button class="toggle-btn toggle-on" id="toggle-autostop" onclick="toggleAutoStop()">On</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Progression (all levels)</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Step size</div><div class="setting-desc">Units added per step (seconds for L1/L2, reps for L3)</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('stepSec',-1)">−</button>
+          <div><div class="setting-val" id="sv-stepSec">2</div><div class="setting-unit">units</div></div>
+          <button class="adj-btn" onclick="adj('stepSec',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Qualifying days per step</div><div class="setting-desc">Days hitting minimum before target increases</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('daysPerStep',-1)">−</button>
+          <div><div class="setting-val" id="sv-daysPerStep">7</div><div class="setting-unit">days</div></div>
+          <button class="adj-btn" onclick="adj('daysPerStep',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Min sessions per day</div><div class="setting-desc">Sessions needed for a day to qualify</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('minHangsPerDay',-1)">−</button>
+          <div><div class="setting-val" id="sv-minHangsPerDay">2</div><div class="setting-unit">sessions</div></div>
+          <button class="adj-btn" onclick="adj('minHangsPerDay',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Starting targets</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">L1 start (passive hang)</div><div class="setting-desc">Initial target in seconds</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('startSecL1',-1)">−</button>
+          <div><div class="setting-val" id="sv-startSecL1">8</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('startSecL1',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">L2 start (active hang)</div><div class="setting-desc">Resets to this when you level up to L2</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('startSecL2',-1)">−</button>
+          <div><div class="setting-val" id="sv-startSecL2">5</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('startSecL2',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">L3 start (shrugs)</div><div class="setting-desc">Initial rep target when you reach L3</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('startRepsL3',-1)">−</button>
+          <div><div class="setting-val" id="sv-startRepsL3">1</div><div class="setting-unit">reps</div></div>
+          <button class="adj-btn" onclick="adj('startRepsL3',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Level-up suggestions</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Suggest L2 at target ≥</div><div class="setting-desc">Seconds — when to suggest moving from passive to active hang</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('levelupThreshL1',-1)">−</button>
+          <div><div class="setting-val" id="sv-levelupThreshL1">30</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('levelupThreshL1',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Suggest L3 at target ≥</div><div class="setting-desc">Seconds — when to suggest moving from active hang to shrugs</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('levelupThreshL2',-1)">−</button>
+          <div><div class="setting-val" id="sv-levelupThreshL2">20</div><div class="setting-unit">sec</div></div>
+          <button class="adj-btn" onclick="adj('levelupThreshL2',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Miss penalty</div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Grace days</div><div class="setting-desc">Missed days allowed before penalty applies</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('graceDays',-1)">−</button>
+          <div><div class="setting-val" id="sv-graceDays">1</div><div class="setting-unit">days</div></div>
+          <button class="adj-btn" onclick="adj('graceDays',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Penalty per missed day</div><div class="setting-desc">Units deducted from earned progress beyond grace period</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('penaltySec',-1)">−</button>
+          <div><div class="setting-val" id="sv-penaltySec">2</div><div class="setting-unit">units</div></div>
+          <button class="adj-btn" onclick="adj('penaltySec',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">Backup &amp; Restore</div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">Download backup</div>
+          <div class="setting-desc">Save all sessions and settings as a JSON file</div>
+        </div>
+        <button class="backup-btn" onclick="downloadBackup()">↓ Export</button>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <div class="setting-name">Restore from file</div>
+          <div class="setting-desc">Load a previously exported backup — replaces current data</div>
+        </div>
+        <button class="backup-btn" onclick="document.getElementById('restore-input').click()">↑ Import</button>
+        <input type="file" id="restore-input" accept=".json,application/json" style="display:none" onchange="restoreBackup(event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INFO / GUIDE ══ -->
+  <div id="info-screen" class="screen">
+
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--l1)">L1</div>
+        <div>
+          <div class="info-level-name" style="color:var(--l1)">Passive Dead Hang</div>
+          <div class="info-level-sub">Foundation — grip, shoulder stability, body weight tolerance</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p>The passive dead hang is the starting point. You hang from the bar completely relaxed — arms straight, shoulders loose, feet off the ground. Despite feeling simple, it builds grip strength, decompresses the spine, and begins conditioning your tendons and connective tissue.</p>
+        <p><strong>How to do it:</strong> Grip the bar with both hands slightly wider than shoulder-width, palms facing away. Let your body hang with arms fully extended. Do not brace or tense — the point is passive loading.</p>
+        <div class="info-cue">
+          ↑ Hands shoulder-width or slightly wider<br>
+          ↑ Arms fully extended, elbows soft (not locked)<br>
+          ↑ Shoulders relaxed and raised toward ears<br>
+          ↑ Body still — no swinging or kicking
+        </div>
+        <p><strong>What you should feel:</strong> A comfortable stretch across the lats, shoulders, and upper back. Mild grip fatigue is normal. Nothing sharp or painful.</p>
+        <div class="info-tip"><strong>GtG rule:</strong> Stop well before your grip gives out. Each hang should feel easy — if you're shaking, you went too long.</div>
+      </div>
+    </div>
+
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--l2)">L2</div>
+        <div>
+          <div class="info-level-name" style="color:var(--l2)">Active Hang</div>
+          <div class="info-level-sub">Activation — engage the lats, build pulling readiness</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p>The active hang looks identical to the passive hang from the outside, but involves deliberately engaging your shoulder muscles. By depressing and retracting your scapulae (shoulder blades), you activate the lats — the primary muscles used in a pull-up. This is the single most important step most beginners skip.</p>
+        <p><strong>How to do it:</strong> Start in a passive hang. Then, without bending your elbows, pull your shoulders <em>down and back</em> — think "away from your ears" and "together behind you." Your chest will rise slightly and your body will lift a centimetre or two. Hold this engaged position for the duration.</p>
+        <div class="info-cue l2">
+          ↑ Start from a relaxed passive hang<br>
+          ↑ Pull shoulder blades DOWN (away from ears)<br>
+          ↑ Pull shoulder blades BACK (together behind you)<br>
+          ↑ Arms stay straight throughout — no elbow bend<br>
+          ↑ Feel your chest open and rise slightly
+        </div>
+        <p><strong>What you should feel:</strong> A clear activation in your upper back and lats. This is genuinely harder than it looks — your target time resets lower because it's a different, more demanding exercise.</p>
+        <div class="info-tip"><strong>Common mistake:</strong> Bending the elbows. The scapular movement should come entirely from the shoulder girdle, not the arms.</div>
+      </div>
+    </div>
+
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--l3)">L3</div>
+        <div>
+          <div class="info-level-name" style="color:var(--l3)">Scapular Shrugs</div>
+          <div class="info-level-sub">Strength — build the first movement of a pull-up</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p>Scapular shrugs are the first true pulling movement on your way to a pull-up. Starting from an active hang, you perform a small but deliberate downward pull of the shoulder blades — elevating your body slightly without bending the elbows. This strengthens the lower trapezius and the initial phase of the pull-up in isolation.</p>
+        <p><strong>How to do it:</strong> Get into a solid active hang (L2 position). From there, drive your shoulder blades further down and squeeze them together to raise your body a few centimetres. Hold the top for 1–2 seconds, then slowly lower back to the active hang. That's one rep. The app counts reps — use the + / − buttons after each one.</p>
+        <div class="info-cue l3">
+          ↑ Begin in active hang — shoulders already engaged<br>
+          ↑ Drive scapulae DOWN and IN to rise slightly<br>
+          ↑ Hold the top for 1–2 seconds<br>
+          ↑ Lower slowly and with control<br>
+          ↑ Elbows remain straight throughout<br>
+          ↑ Reset fully to active hang between reps
+        </div>
+        <p><strong>What you should feel:</strong> A strong contraction in the mid-back and lower traps. The movement range is small — only a few centimetres — but the muscular effort is significant.</p>
+        <div class="info-tip"><strong>Quality over quantity:</strong> One perfect shrug with a 2-second hold is worth more than five sloppy ones. If your elbows start bending, stop and rest.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div id="toast"></div>
+<div id="update-banner">
+  <span class="update-msg">Update available</span>
+  <div class="update-actions">
+    <button class="update-btn-apply" onclick="applyUpdate()">Reload</button>
+    <button class="update-btn-dismiss" onclick="dismissUpdate()">Later</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5.4/dist/speech-commands.min.js"></script>
+<script type="module" src="lib.js"></script>
+<script defer src="app.js"></script>
+</body>
+</html>
