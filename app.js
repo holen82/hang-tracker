@@ -624,6 +624,7 @@ function restoreBackup(event){
 // ═══════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════
+if (window.APP_VERSION) document.getElementById('version-badge').textContent = window.APP_VERSION;
 refreshTimerUI();
 
 // ═══════════════════════════════════════════════════
