@@ -1,11 +1,11 @@
 # Hang Tracker — Project Memory
 
 ## What this is
-A single-file PWA (`index.html`) for tracking a pull-up training program using the **Greasing the Groove (GtG)** methodology. Hosted on GitHub Pages. The user is working toward their first pull-up from a doorframe bar at home.
+A single-file PWA (`index.html`) for tracking a pull-up training program using the **Greasing the Groove (GtG)** methodology. Hosted on GitHub Pages. The user is working toward their first pull-up by consistently doing micro workouts.
 
 ## Live file
-`index.html` in the repo root (renamed from `hang-tracker.html`). GitHub Pages serves it at:
-`https://YOUR-USERNAME.github.io/hang-tracker/`
+`index.html` in the repo root. GitHub Pages serves it at:
+`https://holen82.github.io/hang-tracker/`
 
 ## GtG methodology (core training philosophy)
 - Coined by Pavel Tsatsouline — strength as a skill trained neurologically
