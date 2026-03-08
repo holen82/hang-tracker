@@ -1,9 +1,10 @@
-const CACHE = 'hang-v8';
+const CACHE = 'hang-v9';
 
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
+  './lib.js',
   './app.js',
   './manifest.json'
 ];

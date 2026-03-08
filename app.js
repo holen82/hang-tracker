@@ -5,20 +5,6 @@ const SESSIONS_KEY = 'hang_sessions_v1';
 const SETTINGS_KEY = 'hang_settings_v2';
 const STATE_KEY    = 'hang_state_v1';
 
-const DEFAULTS = {
-  startSecL1:8, startSecL2:5, startRepsL3:1,
-  stepSec:2, daysPerStep:7, minHangsPerDay:2,
-  graceDays:1, penaltySec:2,
-  levelupThreshL1:30, levelupThreshL2:20,
-  delayStart:5, autoStop:true
-};
-const LIMITS = {
-  startSecL1:[2,60], startSecL2:[2,60], startRepsL3:[1,20],
-  stepSec:[1,10], daysPerStep:[1,30], minHangsPerDay:[1,10],
-  graceDays:[0,7], penaltySec:[0,10],
-  levelupThreshL1:[10,120], levelupThreshL2:[10,120],
-  delayStart:[0,30]
-};
 
 function getSessions(){ try{ return JSON.parse(localStorage.getItem(SESSIONS_KEY))||[]; }catch{ return []; } }
 function saveSessions(a){ localStorage.setItem(SESSIONS_KEY,JSON.stringify(a)); }
@@ -30,44 +16,9 @@ function saveState(s){ localStorage.setItem(STATE_KEY,JSON.stringify(s)); }
 // ═══════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════
-function dayKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-
 const LEVEL_COLORS = { 1:'#c8f542', 2:'#42d4f5', 3:'#f542c8' };
 const LEVEL_NAMES  = { 1:'Passive Hang', 2:'Active Hang', 3:'Scapular Shrugs' };
 const LEVEL_UNITS  = { 1:'s', 2:'s', 3:' reps' };
-
-// ═══════════════════════════════════════════════════
-//  PROGRESSION ENGINE (per-level, independent)
-// ═══════════════════════════════════════════════════
-function computeProgression(sessions, s, level) {
-  const startVal = level===1 ? s.startSecL1 : level===2 ? s.startSecL2 : s.startRepsL3;
-  const { stepSec, daysPerStep, minHangsPerDay, graceDays, penaltySec } = s;
-
-  // only sessions for this level
-  const lvlSessions = sessions.filter(x => (x.level||1) === level);
-  if (!lvlSessions.length) return { targetVal:startVal, qualDays:0, daysIntoStep:0, nextStepIn:daysPerStep };
-
-  const counts = {};
-  lvlSessions.forEach(x => { const k=dayKey(new Date(x.ts)); counts[k]=(counts[k]||0)+1; });
-
-  const firstDate = new Date(lvlSessions[0].ts); firstDate.setHours(0,0,0,0);
-  const yesterday = new Date(); yesterday.setHours(0,0,0,0); yesterday.setDate(yesterday.getDate()-1);
-
-  let qualDays=0, penaltyPool=0, missStreak=0;
-  const d = new Date(firstDate);
-  while (d <= yesterday) {
-    const c = counts[dayKey(d)]||0;
-    if (c >= minHangsPerDay)     { qualDays++; missStreak=0; }
-    else if (c === 0)            { missStreak++; if(missStreak>graceDays) penaltyPool+=penaltySec; }
-    else                         { missStreak=0; } // partial — neutral
-    d.setDate(d.getDate()+1);
-  }
-
-  const earned   = Math.floor(qualDays/daysPerStep)*stepSec;
-  const targetVal = Math.max(startVal, startVal+earned-penaltyPool);
-  const daysIntoStep = qualDays%daysPerStep;
-  return { targetVal, qualDays, daysIntoStep, nextStepIn:daysPerStep-daysIntoStep };
-}
 
 // ═══════════════════════════════════════════════════
 //  TIMER STATE
