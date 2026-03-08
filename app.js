@@ -405,7 +405,7 @@ function renderHistory(){
   const WEEKS=15, today=new Date(); today.setHours(0,0,0,0);
   const start=new Date(today); start.setDate(today.getDate()-(WEEKS*7-1));
   const dow=start.getDay(); start.setDate(start.getDate()+(dow===0?-6:1-dow));
-  document.getElementById('day-labels').innerHTML=['M','','W','','F','',''].map(l=>`<div class="heatmap-day-label">${l}</div>`).join('');
+  document.getElementById('day-labels').innerHTML=['M','','W','','F','','S'].map(l=>`<div class="heatmap-day-label">${l}</div>`).join('');
   const hm=document.getElementById('heatmap'); hm.innerHTML='';
   const firstDay=sessions.length?new Date(sessions[0].ts):null; if(firstDay)firstDay.setHours(0,0,0,0);
   let mData=[],prevM=-1,ci=0;
@@ -430,7 +430,7 @@ function renderHistory(){
     hm.appendChild(col); ci++;
   }
   const ml=document.getElementById('month-labels'); ml.innerHTML='';
-  mData.forEach((m,i)=>{const sp=document.createElement('div');sp.className='month-label';sp.textContent=m.month;sp.style.width=(((mData[i+1]?mData[i+1].col:ci)-m.col)*16)+'px';sp.style.flexShrink='0';ml.appendChild(sp);});
+  mData.forEach((m,i)=>{const sp=document.createElement('div');sp.className='month-label';sp.textContent=m.month;sp.style.width=(((mData[i+1]?mData[i+1].col:ci)-m.col)*16-3)+'px';sp.style.flexShrink='0';ml.appendChild(sp);});
   setTimeout(()=>{const w=document.querySelector('.heatmap-wrap');if(w)w.scrollLeft=w.scrollWidth;},50);
 
   // session list (all sessions, recent 30)

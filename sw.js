@@ -1,4 +1,4 @@
-const CACHE = 'hang-v6';
+const CACHE = 'hang-v8';
 
 const APP_SHELL = [
   './',
