@@ -7,7 +7,10 @@ const STATE_KEY    = 'hang_state_v1';
 
 
 function getSessions(){ try{ return JSON.parse(localStorage.getItem(SESSIONS_KEY))||[]; }catch{ return []; } }
-function saveSessions(a){ localStorage.setItem(SESSIONS_KEY,JSON.stringify(a)); }
+function saveSessions(a){
+  a.sort((x,y)=>x.ts-y.ts);
+  localStorage.setItem(SESSIONS_KEY,JSON.stringify(a));
+}
 function getSettings(){ try{ return {...DEFAULTS,...JSON.parse(localStorage.getItem(SETTINGS_KEY))}; }catch{ return {...DEFAULTS}; } }
 function saveSettings(s){ localStorage.setItem(SETTINGS_KEY,JSON.stringify(s)); }
 function getState(){ try{ return JSON.parse(localStorage.getItem(STATE_KEY))||{level:1,levelupDismissed:false}; }catch{ return {level:1,levelupDismissed:false}; } }
@@ -603,6 +606,10 @@ function restoreBackup(event){
       if(!data.version || !Array.isArray(data.sessions)){
         showToast('Invalid backup file'); return;
       }
+      const valid = data.sessions.every(s =>
+        s && typeof s.ts === 'number' && typeof s.duration === 'number'
+      );
+      if(!valid){ showToast('Invalid backup file'); return; }
       if(!confirm(`Restore ${data.sessions.length} sessions from ${data.exportedAt ? new Date(data.exportedAt).toLocaleDateString() : 'backup'}? This replaces current data.`)){
         event.target.value=''; return;
       }
