@@ -17,10 +17,37 @@
 <body>
 <div id="app">
   <nav>
-    <button class="active" onclick="showScreen('timer')"   id="nav-timer">Timer</button>
-    <button onclick="showScreen('history')"  id="nav-history">Log</button>
-    <button onclick="showScreen('settings')" id="nav-settings">Settings</button>
-    <button onclick="showScreen('info')"     id="nav-info">Guide</button>
+    <button class="active" onclick="showScreen('timer')"   id="nav-timer">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="8" cy="9" r="6"/>
+        <path d="M8 6v3l2 1"/>
+        <path d="M6 1h4"/>
+      </svg>
+      Timer
+    </button>
+    <button onclick="showScreen('history')"  id="nav-history">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M2 4h12"/>
+        <path d="M2 8h12"/>
+        <path d="M2 12h12"/>
+      </svg>
+      Log
+    </button>
+    <button onclick="showScreen('settings')" id="nav-settings">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="8" cy="8" r="2.5"/>
+        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41"/>
+      </svg>
+      Settings
+    </button>
+    <button onclick="showScreen('info')"     id="nav-info">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M1 11.5C1 7.91 3.69 5 8 3c4.31 2 7 4.91 7 8.5"/>
+        <path d="M5 14h6"/>
+        <path d="M6.5 11.5V9h3v2.5"/>
+      </svg>
+      Guide
+    </button>
   </nav>
 
   <!-- ══ TIMER ══ -->
@@ -48,6 +75,7 @@
         <span id="today-target-label">target: —</span>
       </div>
     </div>
+    <div id="streak-label"></div>
 
     <!-- Ring (levels 1 & 2) -->
     <div class="timer-ring" id="timer-ring">
@@ -85,8 +113,19 @@
         <span class="tap-delay-lbl">delay</span>
       </button>
     </div>
+    <div id="delay-hint">
+      <span class="delay-hint-arrow">↑</span>
+      Tap the right segment for a delayed start
+      <button class="delay-hint-dismiss" onclick="dismissDelayHint()">×</button>
+    </div>
+
+    <div id="cue-card">
+      <button id="cue-toggle" onclick="toggleCue()">Form cues <span id="cue-arrow">▾</span></button>
+      <div id="cue-body"></div>
+    </div>
 
     <div class="post-timer" id="post-timer">
+      <div class="postsave-header">Nice work!</div>
       <div class="presave-editor">
         <button class="presave-adj" onclick="adjustPresave(-1)">−</button>
         <div>
@@ -95,7 +134,7 @@
         </div>
         <button class="presave-adj" onclick="adjustPresave(1)">+</button>
       </div>
-      <div class="presave-hint">tap ± to adjust if needed</div>
+      <div class="presave-hint">Adjust if you stopped the timer late</div>
       <button id="save-btn"    onclick="saveSession()">Save this session</button>
       <button id="discard-btn" onclick="discardSession()">Discard</button>
     </div>
@@ -115,6 +154,12 @@
           <div class="heatmap-months" id="month-labels"></div>
           <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
         </div>
+      </div>
+      <div class="heatmap-legend">
+        <div class="heatmap-legend-item"><div class="heatmap-cell has-1"></div><span>1</span></div>
+        <div class="heatmap-legend-item"><div class="heatmap-cell has-2"></div><span>2</span></div>
+        <div class="heatmap-legend-item"><div class="heatmap-cell full"></div><span>3+</span></div>
+        <div class="heatmap-legend-item"><div class="heatmap-cell bonus"></div><span>bonus</span></div>
       </div>
     </div>
     <div>

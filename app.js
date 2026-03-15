@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════
 //  STORAGE
 // ═══════════════════════════════════════════════════
-const SESSIONS_KEY = 'hang_sessions_v1';
-const SETTINGS_KEY = 'hang_settings_v2';
-const STATE_KEY    = 'hang_state_v1';
+const SESSIONS_KEY  = 'hang_sessions_v1';
+const SETTINGS_KEY  = 'hang_settings_v2';
+const STATE_KEY     = 'hang_state_v1';
+const CUE_OPEN_KEY  = 'hang_cue_open_v1';
 
 
 function getSessions(){ try{ return JSON.parse(localStorage.getItem(SESSIONS_KEY))||[]; }catch{ return []; } }
@@ -13,7 +14,7 @@ function saveSessions(a){
 }
 function getSettings(){ try{ return {...DEFAULTS,...JSON.parse(localStorage.getItem(SETTINGS_KEY))}; }catch{ return {...DEFAULTS}; } }
 function saveSettings(s){ localStorage.setItem(SETTINGS_KEY,JSON.stringify(s)); }
-function getState(){ try{ return JSON.parse(localStorage.getItem(STATE_KEY))||{level:1,levelupDismissed:false}; }catch{ return {level:1,levelupDismissed:false}; } }
+function getState(){ try{ return JSON.parse(localStorage.getItem(STATE_KEY))||{level:1}; }catch{ return {level:1}; } }
 function saveState(s){ localStorage.setItem(STATE_KEY,JSON.stringify(s)); }
 
 // ═══════════════════════════════════════════════════
@@ -24,10 +25,46 @@ const LEVEL_NAMES  = { 1:'Passive Hang', 2:'Active Hang', 3:'Scapular Shrugs' };
 const LEVEL_UNITS  = { 1:'s', 2:'s', 3:' reps' };
 
 // ═══════════════════════════════════════════════════
+//  CUE CARD
+// ═══════════════════════════════════════════════════
+const CUE_DATA = {
+  1: [
+    'Grip slightly wider than shoulder-width, palms facing away',
+    'Arms fully extended — elbows soft, not locked',
+    'Shoulders relaxed and raised toward ears',
+    'Body still — no swinging or kicking',
+    'Stop well before your grip gives out'
+  ],
+  2: [
+    'Start from a relaxed passive hang',
+    'Pull shoulder blades DOWN — away from ears',
+    'Pull shoulder blades BACK — together behind you',
+    'Arms stay straight throughout — no elbow bend',
+    'Feel your chest open and rise slightly'
+  ],
+  3: [
+    'Begin in active hang — shoulders already engaged',
+    'Drive scapulae DOWN and IN to rise slightly',
+    'Hold the top for 1–2 seconds',
+    'Lower slowly and with control',
+    'Elbows remain straight throughout'
+  ]
+};
+
+function toggleCue(){
+  const card=document.getElementById('cue-card');
+  card.classList.toggle('open');
+  const open=card.classList.contains('open');
+  document.getElementById('cue-arrow').textContent = open ? '▴' : '▾';
+  localStorage.setItem(CUE_OPEN_KEY, open ? '1' : '0');
+}
+
+// ═══════════════════════════════════════════════════
 //  TIMER STATE
 // ═══════════════════════════════════════════════════
 const RING_C = 2*Math.PI*108;
 let running=false, startTime=null, elapsed=0, raf=null, lastDur=null;
+let _levelupDismissedThisSession=false;
 let currentReps=0;  // for level 3
 let countdownActive=false, countdownTimer=null;
 let _timerTarget=null, _timerAutoStop=false;
@@ -53,6 +90,7 @@ function startTimer(){
   document.getElementById('post-timer').classList.remove('visible');
   document.getElementById('ring').classList.remove('paused');
   document.getElementById('tap-delay').classList.add('hidden');
+  document.getElementById('cue-card').classList.add('hidden');
   tick();
 }
 
@@ -67,6 +105,7 @@ function stopTimer(){
   document.getElementById('presave-sec').textContent=(lastDur/1000).toFixed(1);
   document.getElementById('presave-unit').textContent='seconds';
   document.getElementById('post-timer').classList.add('visible');
+  document.getElementById('cue-card').classList.remove('hidden');
   if(getActiveLevel()!==3) showDelayBtn();
 }
 
@@ -212,7 +251,8 @@ function discardSession(){
 //  LEVEL MANAGEMENT
 // ═══════════════════════════════════════════════════
 function switchLevel(lvl){
-  const st=getState(); st.level=lvl; st.levelupDismissed=false; saveState(st);
+  _levelupDismissedThisSession=false;
+  const st=getState(); st.level=lvl; saveState(st);
   applyLevelTheme(lvl);
   refreshTimerUI();
   renderSettings(getSettings());
@@ -247,8 +287,8 @@ function applyLevelTheme(lvl){
 }
 
 function checkLevelUpSuggestion(){
+  if(_levelupDismissedThisSession) return;
   const st=getState();
-  if(st.levelupDismissed) return;
   const lvl=st.level;
   if(lvl>=3) return;
   const s=getSettings();
@@ -273,8 +313,45 @@ function confirmLevelUp(){
 }
 
 function dismissLevelUp(){
-  const st=getState(); st.levelupDismissed=true; saveState(st);
+  _levelupDismissedThisSession=true;
   document.getElementById('levelup-banner').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════
+//  DELAY HINT
+// ═══════════════════════════════════════════════════
+function dismissDelayHint(){
+  document.getElementById('delay-hint').classList.remove('visible');
+  localStorage.setItem('hang_delay_hint_seen','1');
+}
+
+function maybeShowDelayHint(){
+  if(localStorage.getItem('hang_delay_hint_seen')) return;
+  const s=getSettings();
+  if(s.delayStart<=0) return;
+  const btn=document.getElementById('tap-delay');
+  if(btn&&!btn.classList.contains('hidden')){
+    document.getElementById('delay-hint').classList.add('visible');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  STREAK
+// ═══════════════════════════════════════════════════
+function computeStreak(sessions, settings, level){
+  const lvlSessions = sessions.filter(x => (x.level || 1) === level);
+  const counts = {};
+  lvlSessions.forEach(x => { const k = dayKey(new Date(x.ts)); counts[k] = (counts[k] || 0) + 1; });
+  const min = settings.minHangsPerDay;
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  // Start from yesterday — today is in progress, not yet "complete"
+  d.setDate(d.getDate() - 1);
+  let streak = 0;
+  while ((counts[dayKey(d)] || 0) >= min) {
+    streak++;
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
 }
 
 // ═══════════════════════════════════════════════════
@@ -301,6 +378,15 @@ function refreshTimerUI(){
   const unit=lvl===3?'reps':'s';
   document.getElementById('timer-target-lbl').textContent=`target ${prog.targetVal}${unit}`;
   if(lvl===3) document.getElementById('rep-target-lbl').textContent=`target ${prog.targetVal} reps`;
+
+  const streakEl = document.getElementById('streak-label');
+  const streak = computeStreak(sessions, s, lvl);
+  streakEl.textContent = streak > 0 ? streak + ' day streak' : '';
+
+  const cueBody=document.getElementById('cue-body');
+  if(cueBody){
+    cueBody.innerHTML='<ul class="cue-list">'+CUE_DATA[lvl].map(c=>`<li>${c}</li>`).join('')+'</ul>';
+  }
 
   applyLevelTheme(lvl);
   checkLevelUpSuggestion();
@@ -351,7 +437,8 @@ function renderHistory(){
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-value">${prog.targetVal}${unit}</div><div class="stat-label">Target</div></div>
     <div class="stat-card"><div class="stat-value">${streak}</div><div class="stat-label">Streak</div></div>
-    <div class="stat-card"><div class="stat-value">${best}${unit}</div><div class="stat-label">Best</div></div>`;
+    <div class="stat-card"><div class="stat-value">${best}${unit}</div><div class="stat-label">Best</div></div>
+    <div class="stat-card"><div class="stat-value">${lvlSess.length}</div><div class="stat-label">Sessions</div></div>`;
 
   // heatmap (all sessions, colour by level)
   const allCounts={};
@@ -389,7 +476,7 @@ function renderHistory(){
 
   // session list (all sessions, recent 30)
   const el=document.getElementById('session-list');
-  if(!sessions.length){el.innerHTML=`<div class="empty-state">No sessions yet.<br>Start your first hang ↑</div>`;return;}
+  if(!sessions.length){el.innerHTML=`<div class="empty-state">No sessions yet<br>Head to the Timer tab to log your first hang.</div>`;return;}
   el.innerHTML='';
   [...sessions].reverse().slice(0,30).forEach((sess,idx)=>{
     const realIdx=sessions.length-1-idx;
@@ -401,7 +488,7 @@ function renderHistory(){
     const dispUnit=sl===3?'reps':'s';
     const color=LEVEL_COLORS[sl];
     const wrap=document.createElement('div'); wrap.className='session-wrap';
-    const item=document.createElement('div'); item.className='session-item';
+    const item=document.createElement('div'); item.className=`session-item lvl-${sl}`;
     item.innerHTML=`
       <div style="display:flex;align-items:center;gap:8px">
         <div class="session-lvl-pip" style="background:${color}"></div>
@@ -632,7 +719,14 @@ function restoreBackup(event){
 //  INIT
 // ═══════════════════════════════════════════════════
 if (window.APP_VERSION) document.getElementById('version-badge').textContent = window.APP_VERSION;
+(function initCueState(){
+  const stored=localStorage.getItem(CUE_OPEN_KEY);
+  const open = stored === null ? true : stored === '1';
+  const card=document.getElementById('cue-card');
+  if(open){ card.classList.add('open'); document.getElementById('cue-arrow').textContent='▴'; }
+})();
 refreshTimerUI();
+maybeShowDelayHint();
 
 // ═══════════════════════════════════════════════════
 //  SERVICE WORKER + UPDATE DETECTION
