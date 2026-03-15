@@ -86,10 +86,10 @@ body.lvl-3 .ring-fill.over-target{stroke:#fff}
 #mic-status.listening,#mic-status.error{gap:8px;padding:8px 14px;border-color:var(--border);background:var(--surface)}
 #mic-status.listening{border-color:var(--accent-dim)}
 #mic-status.error{border-color:var(--danger)}
-.mic-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);opacity:0.35;flex-shrink:0;transition:background 0.2s,opacity 0.2s}
-#mic-status.listening .mic-dot,#mic-status.error .mic-dot{opacity:1}
-#mic-status.listening .mic-dot{background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
-#mic-status.error .mic-dot{background:var(--danger)}
+.mic-icon{width:16px;height:16px;color:var(--muted);opacity:0.35;flex-shrink:0;transition:color 0.2s,opacity 0.2s}
+#mic-status.listening .mic-icon,#mic-status.error .mic-icon{opacity:1}
+#mic-status.listening .mic-icon{color:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+#mic-status.error .mic-icon{color:var(--danger)}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .mic-text{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);max-width:0;overflow:hidden;white-space:nowrap;opacity:0;transition:max-width 0.2s,opacity 0.2s,color 0.2s}
 #mic-status.listening .mic-text,#mic-status.error .mic-text{max-width:200px;opacity:1}
