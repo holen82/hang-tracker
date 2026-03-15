@@ -90,7 +90,7 @@ function startTimer(){
   document.getElementById('post-timer').classList.remove('visible');
   document.getElementById('ring').classList.remove('paused');
   document.getElementById('tap-delay').classList.add('hidden');
-  document.getElementById('cue-card').classList.add('hidden');
+  document.getElementById('delay-hint').classList.remove('visible');
   tick();
 }
 
@@ -105,8 +105,8 @@ function stopTimer(){
   document.getElementById('presave-sec').textContent=(lastDur/1000).toFixed(1);
   document.getElementById('presave-unit').textContent='seconds';
   document.getElementById('post-timer').classList.add('visible');
-  document.getElementById('cue-card').classList.remove('hidden');
-  if(getActiveLevel()!==3) showDelayBtn();
+  document.getElementById('delay-hint').classList.remove('visible');
+  document.getElementById('cue-card').classList.add('hidden');
 }
 
 function adjustRep(delta){
@@ -238,6 +238,8 @@ function saveSession(){
   document.getElementById('post-timer').classList.remove('visible');
   resetTimer();
   refreshTimerUI();
+  document.getElementById('cue-card').classList.remove('hidden');
+  if(getActiveLevel()!==3){ showDelayBtn(); maybeShowDelayHint(); }
   showToast('Session saved ✓');
 }
 
@@ -245,6 +247,8 @@ function discardSession(){
   lastDur=null;
   document.getElementById('post-timer').classList.remove('visible');
   resetTimer();
+  document.getElementById('cue-card').classList.remove('hidden');
+  if(getActiveLevel()!==3){ showDelayBtn(); maybeShowDelayHint(); }
 }
 
 // ═══════════════════════════════════════════════════
