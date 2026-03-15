@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(npm test:*)",
-      "Bash(npx playwright:*)"
+      "Bash(npm run:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npx serve:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Edit(C:\\git\\hang-tracker\\**)",
+      "Write(C:\\git\\hang-tracker\\**)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:smartscope.blog)"
     ]
   }
 }
