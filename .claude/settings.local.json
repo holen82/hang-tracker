@@ -13,7 +13,15 @@
       "Edit(C:\\git\\hang-tracker\\**)",
       "Write(C:\\git\\hang-tracker\\**)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:smartscope.blog)"
+      "WebFetch(domain:smartscope.blog)",
+      "WebSearch",
+      "WebFetch(domain:www.artofmanliness.com)",
+      "WebFetch(domain:strength.university)",
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:www.hubermanlab.com)",
+      "WebFetch(domain:pursueperformance.com)",
+      "WebFetch(domain:link.springer.com)",
+      "WebFetch(domain:mtntactical.com)"
     ]
   }
 }

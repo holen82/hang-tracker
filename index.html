@@ -76,6 +76,7 @@
       </div>
     </div>
     <div id="streak-label"></div>
+    <div id="last-set-label"></div>
 
     <!-- Ring (levels 1 & 2) -->
     <div class="timer-ring" id="timer-ring">
@@ -125,7 +126,8 @@
     </div>
 
     <div class="post-timer" id="post-timer">
-      <div class="postsave-header">Nice work!</div>
+      <div class="postsave-header" id="postsave-header">Nice work!</div>
+      <div class="postsave-context" id="postsave-context"></div>
       <div class="presave-editor">
         <button class="presave-adj" onclick="adjustPresave(-1)">−</button>
         <div>
@@ -338,6 +340,14 @@
           <button class="adj-btn" onclick="adj('penaltySec',-1)">−</button>
           <div><div class="setting-val" id="sv-penaltySec">2</div><div class="setting-unit">units</div></div>
           <button class="adj-btn" onclick="adj('penaltySec',1)">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-info"><div class="setting-name">Rest days per week</div><div class="setting-desc">Planned rest days exempt from penalty — GtG recommends at least 1</div></div>
+        <div class="setting-control">
+          <button class="adj-btn" onclick="adj('restDaysPerWeek',-1)">−</button>
+          <div><div class="setting-val" id="sv-restDaysPerWeek">1</div><div class="setting-unit">days</div></div>
+          <button class="adj-btn" onclick="adj('restDaysPerWeek',1)">+</button>
         </div>
       </div>
     </div>

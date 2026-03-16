@@ -94,8 +94,27 @@ function startTimer(){
   tick();
 }
 
+function updatePostTimerContext(val, target, lvl){
+  const ctx=document.getElementById('postsave-context');
+  if(!target){ctx.textContent='';return;}
+  const unit=lvl===3?' reps':'s';
+  const sessions=getSessions().filter(x=>(x.level||1)===lvl);
+  const rawVal=lvl===3?val:val*1000;
+  const prevBest=sessions.length?Math.max(...sessions.map(x=>x.duration)):0;
+  if(sessions.length>0&&rawVal>prevBest){
+    ctx.textContent='New personal best!'; ctx.style.color='var(--text)';
+  } else if(val>=target){
+    const over=lvl===3?(val-target):(val-target).toFixed(1);
+    ctx.textContent=over>0?`${over}${unit} over target`:'Target hit!'; ctx.style.color='var(--accent)';
+  } else {
+    const short=lvl===3?(target-val):(target-val).toFixed(1);
+    ctx.textContent=`${short}${unit} short — almost there`; ctx.style.color='var(--muted)';
+  }
+}
+
 function stopTimer(){
   running=false;
+  const target=_timerTarget;
   _timerTarget=null; _timerAutoStop=false;
   cancelAnimationFrame(raf);
   lastDur=elapsed;
@@ -104,6 +123,7 @@ function stopTimer(){
   document.getElementById('ring').classList.add('paused');
   document.getElementById('presave-sec').textContent=(lastDur/1000).toFixed(1);
   document.getElementById('presave-unit').textContent='seconds';
+  updatePostTimerContext(lastDur/1000, target, getActiveLevel());
   document.getElementById('post-timer').classList.add('visible');
   document.getElementById('delay-hint').classList.remove('visible');
   document.getElementById('cue-card').classList.add('hidden');
@@ -180,8 +200,11 @@ function cancelCountdown(){
 
 function saveRepSession(){
   lastDur=currentReps; // store reps as "duration" value
+  const s=getSettings();
+  const target=computeProgression(getSessions(),s,3).targetVal;
   document.getElementById('presave-sec').textContent=currentReps;
   document.getElementById('presave-unit').textContent='reps';
+  updatePostTimerContext(currentReps, target, 3);
   currentReps=0;
   document.getElementById('rep-num').textContent='0';
   document.getElementById('post-timer').classList.add('visible');
@@ -231,8 +254,13 @@ function saveSession(){
   if(lastDur===null) return;
   const lvl=getActiveLevel();
   const sessions=getSessions();
+  // Check for personal record before adding
+  const lvlSessions=sessions.filter(x=>(x.level||1)===lvl);
+  const prevBest=lvlSessions.length?Math.max(...lvlSessions.map(x=>x.duration)):0;
+  const newDur=Math.round(lastDur);
+  const isPR=lvlSessions.length>0&&newDur>prevBest;
   // duration: ms for l1/l2, raw reps for l3
-  sessions.push({ ts:Date.now(), duration:Math.round(lastDur), level:lvl });
+  sessions.push({ ts:Date.now(), duration:newDur, level:lvl });
   saveSessions(sessions);
   lastDur=null;
   document.getElementById('post-timer').classList.remove('visible');
@@ -240,7 +268,13 @@ function saveSession(){
   refreshTimerUI();
   document.getElementById('cue-card').classList.remove('hidden');
   if(getActiveLevel()!==3){ showDelayBtn(); maybeShowDelayHint(); }
-  showToast('Session saved ✓');
+  if(isPR){
+    const dispVal=lvl===3?newDur:(newDur/1000).toFixed(1);
+    const unit=lvl===3?' reps':'s';
+    showToast(`New personal best! ${dispVal}${unit}`);
+  } else {
+    showToast('Session saved ✓');
+  }
 }
 
 function discardSession(){
@@ -347,12 +381,15 @@ function computeStreak(sessions, settings, level){
   const counts = {};
   lvlSessions.forEach(x => { const k = dayKey(new Date(x.ts)); counts[k] = (counts[k] || 0) + 1; });
   const min = settings.minHangsPerDay;
+  const grace = settings.graceDays || 0;
   const d = new Date(); d.setHours(0, 0, 0, 0);
   // Start from yesterday — today is in progress, not yet "complete"
   d.setDate(d.getDate() - 1);
-  let streak = 0;
-  while ((counts[dayKey(d)] || 0) >= min) {
-    streak++;
+  let streak = 0, missRun = 0;
+  while (true) {
+    const c = counts[dayKey(d)] || 0;
+    if (c >= min) { streak++; missRun = 0; }
+    else { missRun++; if (missRun > grace) break; }
     d.setDate(d.getDate() - 1);
   }
   return streak;
@@ -386,6 +423,17 @@ function refreshTimerUI(){
   const streakEl = document.getElementById('streak-label');
   const streak = computeStreak(sessions, s, lvl);
   streakEl.textContent = streak > 0 ? streak + ' day streak' : '';
+
+  // last-set elapsed time
+  const lastSetEl=document.getElementById('last-set-label');
+  const allLvlSessions=sessions.filter(x=>(x.level||1)===lvl);
+  if(allLvlSessions.length){
+    const lastTs=allLvlSessions[allLvlSessions.length-1].ts;
+    const mins=Math.round((Date.now()-lastTs)/60000);
+    if(mins<1){lastSetEl.textContent='Last set: just now';lastSetEl.className='too-soon';}
+    else if(mins<60){lastSetEl.textContent=`Last set: ${mins} min ago`;lastSetEl.className=mins<15?'too-soon':mins<=120?'ideal':'neutral';}
+    else{const hrs=Math.floor(mins/60),rm=mins%60;lastSetEl.textContent=`Last set: ${hrs}h ${rm}m ago`;lastSetEl.className='neutral';}
+  } else {lastSetEl.textContent='';}
 
   const cueBody=document.getElementById('cue-body');
   if(cueBody){
