@@ -80,7 +80,7 @@ describe('computeProgression', () => {
     // grace=1: first miss → within grace (no penalty), second → penalised
     // earned = floor(7/7)*2 = 2; penalty = 1*2 = 2; targetVal = max(8, 8+2-2) = 8
     const s = qualDaySessions(7, 1, 9);
-    const settings = { ...S, graceDays: 1, penaltySec: 2 };
+    const settings = { ...S, graceDays: 1, penaltySec: 2, restDaysPerWeek: 0 };
     const r = computeProgression(s, settings, 1);
     expect(r.targetVal).toBe(S.startSecL1);
   });
@@ -88,7 +88,7 @@ describe('computeProgression', () => {
   it('penalty never goes below startVal', () => {
     // Many missed days with high penalty
     const s = [makeSession(30), makeSession(30)]; // one qual day far back
-    const settings = { ...S, penaltySec: 100, graceDays: 0 };
+    const settings = { ...S, penaltySec: 100, graceDays: 0, restDaysPerWeek: 0 };
     const r = computeProgression(s, settings, 1);
     expect(r.targetVal).toBeGreaterThanOrEqual(settings.startSecL1);
   });
