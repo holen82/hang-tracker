@@ -31,8 +31,8 @@ export function computeProgression(sessions, s, level) {
   const { stepSec, daysPerStep, minHangsPerDay } = s;
   const partialHangsMin = s.partialHangsMin || 4;
 
-  // only sessions for this level
-  const lvlSessions = sessions.filter(x => (x.level||1) === level);
+  // only training sessions for this level (exclude max tests)
+  const lvlSessions = sessions.filter(x => (x.level||1) === level && !x.isMax);
   if (!lvlSessions.length) return { targetVal:startVal, qualDays:0, qualScore:0, daysIntoStep:0, nextStepIn:daysPerStep };
 
   const counts = {};
@@ -63,7 +63,7 @@ export function computeRestDayStatus(sessions, s, level) {
   if (restPerWeek === 0) return { isRestDay: false, nextIsRestDay: false };
 
   const partialHangsMin = s.partialHangsMin || 4;
-  const lvlSessions = sessions.filter(x => (x.level||1) === level);
+  const lvlSessions = sessions.filter(x => (x.level||1) === level && !x.isMax);
   const counts = {};
   lvlSessions.forEach(x => { const k=dayKey(new Date(x.ts)); counts[k]=(counts[k]||0)+1; });
 
