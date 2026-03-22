@@ -46,14 +46,37 @@ nav button.active::after{content:'';position:absolute;bottom:-1px;left:20%;width
 .today-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);letter-spacing:0.06em}
 .today-label .on-target{color:var(--accent)}
 .today-label .bonus{color:#fff}
+.today-label .partial{color:var(--l2)}
 .today-label .warn{color:var(--warn)}
 #bonus-spark{font-size:11px;opacity:0;transition:opacity 0.4s;letter-spacing:0.05em}
 
 /* ── Streak label ── */
 #streak-label{font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;text-align:center;margin-top:-14px;margin-bottom:20px;min-height:0;transition:opacity 0.3s}
 #streak-label:empty{display:none}
-#last-set-label{font-size:10px;letter-spacing:0.08em;text-align:center;margin-top:-10px;margin-bottom:16px;min-height:0;transition:opacity 0.3s}
+#last-set-label{font-size:10px;letter-spacing:0.08em;text-align:center;margin-top:-10px;margin-bottom:4px;min-height:0;transition:opacity 0.3s}
 #last-set-label:empty{display:none}
+#rest-until-label{font-size:10px;letter-spacing:0.08em;text-align:center;margin-top:0;margin-bottom:12px;min-height:0;transition:opacity 0.3s;color:var(--accent)}
+#rest-until-label:empty{display:none}
+#rest-banner{font-size:10px;letter-spacing:0.1em;text-align:center;margin-top:-10px;margin-bottom:12px;min-height:0;transition:opacity 0.3s}
+#rest-banner:empty{display:none}
+#rest-banner.rest-today{color:var(--warn);font-weight:600;text-transform:uppercase}
+#rest-banner.rest-next{color:var(--muted)}
+#cycle-banner{font-size:10px;letter-spacing:0.1em;text-align:center;margin-top:-10px;margin-bottom:12px;min-height:0}
+#cycle-banner:empty{display:none}
+#cycle-banner.cycle-deload{color:var(--warn);font-weight:600;text-transform:uppercase}
+#cycle-banner.cycle-complete{background:var(--surface2);border:1px solid var(--accent-dim);border-radius:var(--radius);padding:12px 14px;text-align:center;letter-spacing:0.03em;font-size:12px;color:var(--text)}
+.cycle-banner-btns{display:flex;gap:8px;margin-top:10px;justify-content:center}
+.cycle-banner-btn{flex:1;padding:9px;border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted)}
+.cycle-banner-btn.primary{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+.cycle-banner-btn:active{opacity:0.8}
+.inline-retest-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:3px 8px;cursor:pointer;margin-left:6px;vertical-align:middle}
+.inline-retest-btn:active{background:var(--border)}
+.inline-action-btn{padding:8px 14px;border-radius:8px;background:var(--surface2);border:1px solid var(--accent-dim);color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer}
+.inline-action-btn:active{opacity:0.8}
+.step-hint{font-size:10px;color:var(--muted);letter-spacing:0.04em;padding:0 0 12px 0;margin-top:-8px}
+.step-hint:empty{display:none}
+.step-hint-warn{color:var(--warn)}
+.timer-target-lbl.max-test{color:var(--warn);letter-spacing:0.1em}
 #last-set-label.too-soon{color:var(--muted)}
 #last-set-label.ideal{color:var(--accent)}
 #last-set-label.neutral{color:var(--muted)}
@@ -66,6 +89,8 @@ nav button.active::after{content:'';position:absolute;bottom:-1px;left:20%;width
 .ring-fill.over-target{stroke:#fff}
 .ring-fill.paused{stroke:var(--muted)}
 .ring-overflow{stroke:var(--danger);stroke-linecap:round;transition:stroke-dashoffset 0.05s linear}
+@keyframes ring-spin-max{from{stroke-dashoffset:0}to{stroke-dashoffset:-678.6}}
+.ring-fill.max-test{stroke-dasharray:170 508;stroke:var(--warn);transition:none;animation:ring-spin-max 1.8s linear infinite}
 .timer-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .timer-seconds{font-family:'Bebas Neue',sans-serif;font-size:80px;font-weight:400;line-height:1;color:var(--text);letter-spacing:2px}
 .timer-ms{font-size:20px;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:1px}

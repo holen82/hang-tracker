@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { DEFAULTS, computeProgression } from '../lib.js';
+import { DEFAULTS, computeProgression, computeRestDayStatus, computeWaveDayTarget, computeCycleStatus } from '../lib.js';
 
 // Helper: create a session at noon on a given date offset from "today"
 // daysAgo=0 means today, daysAgo=1 means yesterday, etc.
@@ -10,15 +10,42 @@ function makeSession(daysAgo, level = 1) {
   return { ts: d.getTime(), level };
 }
 
-// Build N qualifying days: 2 sessions each day, starting daysBack days ago
+// Build N qualifying days: DEFAULTS.minHangsPerDay sessions each day, starting daysBack days ago
 function qualDaySessions(count, level = 1, startDaysAgo = null) {
   // startDaysAgo defaults so the last qualifying day is yesterday (daysAgo=1)
   const offset = startDaysAgo ?? count; // day count back from today
   const sessions = [];
   for (let i = 0; i < count; i++) {
     const daysAgo = offset - i; // oldest first
-    sessions.push(makeSession(daysAgo, level));
-    sessions.push(makeSession(daysAgo, level));
+    for (let j = 0; j < DEFAULTS.minHangsPerDay; j++) {
+      sessions.push(makeSession(daysAgo, level));
+    }
+  }
+  return sessions;
+}
+
+// Build N partial days: DEFAULTS.partialHangsMin sessions each day
+function partialDaySessions(count, level = 1, startDaysAgo = null) {
+  const offset = startDaysAgo ?? count;
+  const sessions = [];
+  for (let i = 0; i < count; i++) {
+    const daysAgo = offset - i;
+    for (let j = 0; j < DEFAULTS.partialHangsMin; j++) {
+      sessions.push(makeSession(daysAgo, level));
+    }
+  }
+  return sessions;
+}
+
+// Build N boost days: DEFAULTS.minHangsPerDay + 1 sessions each day
+function boostDaySessions(count, level = 1, startDaysAgo = null) {
+  const offset = startDaysAgo ?? count;
+  const sessions = [];
+  for (let i = 0; i < count; i++) {
+    const daysAgo = offset - i;
+    for (let j = 0; j < DEFAULTS.minHangsPerDay + 1; j++) {
+      sessions.push(makeSession(daysAgo, level));
+    }
   }
   return sessions;
 }
@@ -68,8 +95,7 @@ describe('computeProgression', () => {
     // 7 qual days, then 1 miss (grace=1), then yesterday qual
     const s = qualDaySessions(7, 1, 9); // days 9..3 ago
     // miss day 2, qual day 1
-    s.push(makeSession(1));
-    s.push(makeSession(1));
+    for (let j = 0; j < DEFAULTS.minHangsPerDay; j++) s.push(makeSession(1));
     const r = computeProgression(s, { ...S, graceDays: 1 }, 1);
     // 8 qual days = 1 step (floor(8/7)=1)
     expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
@@ -87,22 +113,66 @@ describe('computeProgression', () => {
 
   it('penalty never goes below startVal', () => {
     // Many missed days with high penalty
-    const s = [makeSession(30), makeSession(30)]; // one qual day far back
+    const s = qualDaySessions(1, 1, 30); // one qual day far back
     const settings = { ...S, penaltySec: 100, graceDays: 0, restDaysPerWeek: 0 };
     const r = computeProgression(s, settings, 1);
     expect(r.targetVal).toBeGreaterThanOrEqual(settings.startSecL1);
   });
 
-  it('partial days (< minHangs) are neutral — no penalty, no qual', () => {
-    // 7 qual days then 3 days with 1 session (partial)
+  it('no-change days (1 to partialHangsMin-1) are neutral — no penalty, no qual', () => {
+    // 7 qual days then 3 days with 1 session each (below partialHangsMin)
     const s = qualDaySessions(7, 1, 10);
-    s.push(makeSession(3));
+    s.push(makeSession(3)); // 1 session each (no change tier)
     s.push(makeSession(2));
     s.push(makeSession(1));
     const r = computeProgression(s, S, 1);
-    // 7 qual + 3 partial = 7 qual, 0 penalty
+    // 7 qual + 3 neutral = 7 qual, 0 penalty
     expect(r.qualDays).toBe(7);
     expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
+  });
+
+  it('partial days earn 0.5 qual score each — two partial days advance progression', () => {
+    // daysPerStep=7: need qualScore>=7 to earn a step
+    // 6 full qual days (score=6) + 2 partial days (score=1) = 7 → 1 step earned
+    const s = qualDaySessions(6, 1, 8); // days 8..3 ago
+    const partial = partialDaySessions(2, 1, 2); // days 2..1 ago
+    const r = computeProgression([...s, ...partial], S, 1);
+    expect(r.qualScore).toBe(7);
+    expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
+  });
+
+  it('partial days do not increment integer qualDays', () => {
+    const s = partialDaySessions(4, 1, 4);
+    const r = computeProgression(s, S, 1);
+    expect(r.qualDays).toBe(0); // no full qual days
+    expect(r.qualScore).toBe(2); // 4 * 0.5
+  });
+
+  it('boost days earn 1.5 qual score each — two boost days exceed one full step', () => {
+    // 2 boost days = qualScore 3.0; daysPerStep=7 → not enough for a step alone
+    // 4 full days + 2 boost days = 4 + 3 = 7 → 1 step
+    const s = qualDaySessions(4, 1, 6); // days 6..3 ago
+    const boost = boostDaySessions(2, 1, 2); // days 2..1 ago
+    const r = computeProgression([...s, ...boost], S, 1);
+    expect(r.qualScore).toBe(7);
+    expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
+  });
+
+  it('boost days increment qualDays (counted as target-met days)', () => {
+    const s = boostDaySessions(3, 1, 3);
+    const r = computeProgression(s, S, 1);
+    expect(r.qualDays).toBe(3);
+    expect(r.qualScore).toBe(4.5); // 3 * 1.5
+  });
+
+  it('mixed tiers compute correct qualScore', () => {
+    // 1 boost (1.5) + 1 partial (0.5) + 1 target (1.0) = 3.0
+    const boost = boostDaySessions(1, 1, 3);
+    const partial = partialDaySessions(1, 1, 2);
+    const target = qualDaySessions(1, 1, 1);
+    const r = computeProgression([...boost, ...partial, ...target], S, 1);
+    expect(r.qualScore).toBe(3);
+    expect(r.qualDays).toBe(2); // only boost + target count
   });
 
   it('level 2 baseline', () => {
@@ -123,15 +193,15 @@ describe('computeProgression', () => {
   });
 
   it('sessions without .level default to level 1', () => {
-    // Sessions with no .level property should count for level 1
     const sessions = [];
     for (let i = 0; i < 7; i++) {
       const daysAgo = 7 - i;
       const d = new Date();
       d.setDate(d.getDate() - daysAgo);
       d.setHours(12, 0, 0, 0);
-      sessions.push({ ts: d.getTime() }); // no .level
-      sessions.push({ ts: d.getTime() });
+      for (let j = 0; j < DEFAULTS.minHangsPerDay; j++) {
+        sessions.push({ ts: d.getTime() }); // no .level
+      }
     }
     const r = computeProgression(sessions, S, 1);
     expect(r.qualDays).toBe(7);
@@ -153,10 +223,160 @@ describe('computeProgression', () => {
   });
 
   it('today excluded — sessions only today give qualDays=0', () => {
-    // 2 sessions today (daysAgo=0) — "today" is excluded from progression
-    const sessions = [makeSession(0), makeSession(0)];
+    // sessions today (daysAgo=0) — "today" is excluded from progression
+    const sessions = qualDaySessions(1, 1, 0); // today
     const r = computeProgression(sessions, S, 1);
     expect(r.qualDays).toBe(0);
     expect(r.targetVal).toBe(S.startSecL1);
+  });
+});
+
+describe('computeRestDayStatus', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 0, 20, 12, 0, 0)); // 2025-01-20
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('no rest days configured → always false', () => {
+    const sessions = qualDaySessions(7);
+    const r = computeRestDayStatus(sessions, { ...S, restDaysPerWeek: 0 }, 1);
+    expect(r.isRestDay).toBe(false);
+    expect(r.nextIsRestDay).toBe(false);
+  });
+
+  it('6 training days in last 7 → today is rest day', () => {
+    // 6 days in the window (today + 5 past days) each with partialHangsMin sessions
+    const sessions = partialDaySessions(6, 1, 5); // days 5..0
+    const r = computeRestDayStatus(sessions, S, 1);
+    expect(r.isRestDay).toBe(true);
+    expect(r.nextIsRestDay).toBe(false);
+  });
+
+  it('5 training days in last 7 → tomorrow is rest day', () => {
+    // 5 qualifying days in the window (days 5..1), none today
+    const sessions = partialDaySessions(5, 1, 5); // days 5..1
+    const r = computeRestDayStatus(sessions, S, 1);
+    expect(r.isRestDay).toBe(false);
+    expect(r.nextIsRestDay).toBe(true);
+  });
+
+  it('4 training days in last 7 → neither', () => {
+    const sessions = partialDaySessions(4, 1, 4); // days 4..1
+    const r = computeRestDayStatus(sessions, S, 1);
+    expect(r.isRestDay).toBe(false);
+    expect(r.nextIsRestDay).toBe(false);
+  });
+});
+
+// ── Helpers for wave / cycle tests ──────────────────────────────────────────
+
+// Returns a timestamp for midnight N days ago relative to the faked "today"
+function daysAgoMidnight(n) {
+  const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-n);
+  return d.getTime();
+}
+
+describe('computeWaveDayTarget', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 0, 20, 12, 0, 0)); // 2025-01-20
+  });
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('null cycleStartDate → type null', () => {
+    const r = computeWaveDayTarget(null, S);
+    expect(r.type).toBeNull();
+    expect(r.sessionTarget).toBeNull();
+  });
+
+  it('day 0 (cycle starts today) → high day', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(0), S);
+    expect(r.type).toBe('high');
+    expect(r.sessionTarget).toBe(S.waveHighSessions);
+  });
+
+  it('day 1 → mid day', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(1), S);
+    expect(r.type).toBe('mid');
+    expect(r.sessionTarget).toBe(S.waveMidSessions);
+  });
+
+  it('day 2 → low day', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(2), S);
+    expect(r.type).toBe('low');
+    expect(r.sessionTarget).toBe(S.waveLowSessions);
+  });
+
+  it('day 3 → high day (second high in wave)', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(3), S);
+    expect(r.type).toBe('high');
+  });
+
+  it('day 6 → rest day', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(6), S);
+    expect(r.type).toBe('rest');
+    expect(r.sessionTarget).toBe(0);
+  });
+
+  it('day 7 → wraps back to high (second full wave)', () => {
+    const r = computeWaveDayTarget(daysAgoMidnight(7), S);
+    expect(r.type).toBe('high');
+  });
+});
+
+describe('computeCycleStatus', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 0, 20, 12, 0, 0)); // 2025-01-20
+  });
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('no cycleStartDate → active false', () => {
+    const r = computeCycleStatus({ level: 1 }, S);
+    expect(r.active).toBe(false);
+  });
+
+  it('day 0 → week 1, not deload, not complete', () => {
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(0) }, S);
+    expect(r.active).toBe(true);
+    expect(r.week).toBe(1);
+    expect(r.isDeload).toBe(false);
+    expect(r.isComplete).toBe(false);
+  });
+
+  it('day 6 → still week 1', () => {
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(6) }, S);
+    expect(r.week).toBe(1);
+  });
+
+  it('day 7 → week 2', () => {
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(7) }, S);
+    expect(r.week).toBe(2);
+  });
+
+  it('day cycleWeeks*7 → deload started', () => {
+    const s = { ...S, cycleWeeks: 6 };
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(s.cycleWeeks*7) }, s);
+    expect(r.isDeload).toBe(true);
+    expect(r.isComplete).toBe(false);
+    expect(r.daysRemaining).toBe(7);
+  });
+
+  it('day cycleWeeks*7 + 3 → deload in progress', () => {
+    const s = { ...S, cycleWeeks: 6 };
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(s.cycleWeeks*7+3) }, s);
+    expect(r.isDeload).toBe(true);
+    expect(r.daysRemaining).toBe(4);
+  });
+
+  it('day cycleWeeks*7 + 7 → complete', () => {
+    const s = { ...S, cycleWeeks: 6 };
+    const r = computeCycleStatus({ level:1, cycleStartDate: daysAgoMidnight(s.cycleWeeks*7+7) }, s);
+    expect(r.isComplete).toBe(true);
+    expect(r.isDeload).toBe(false);
   });
 });

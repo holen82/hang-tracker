@@ -68,6 +68,7 @@ let _levelupDismissedThisSession=false;
 let currentReps=0;  // for level 3
 let countdownActive=false, countdownTimer=null;
 let _timerTarget=null, _timerAutoStop=false;
+let _maxTestMode=false;
 
 function getActiveLevel(){ return getState().level; }
 function getLevelColor(l){ return LEVEL_COLORS[l]; }
@@ -81,8 +82,9 @@ function handleTap(){
 
 function startTimer(){
   const _s=getSettings();
-  _timerTarget=computeProgression(getSessions(),_s,getActiveLevel()).targetVal;
-  _timerAutoStop=_s.autoStop;
+  const st=getState();
+  _timerTarget=computeProgression(getCycleSessions(getSessions(),st),_s,getActiveLevel()).targetVal;
+  _timerAutoStop=_maxTestMode?false:_s.autoStop;
   running=true;
   startTime=performance.now()-elapsed;
   document.getElementById('tap-btn').textContent='Stop';
@@ -91,6 +93,8 @@ function startTimer(){
   document.getElementById('ring').classList.remove('paused');
   document.getElementById('tap-delay').classList.add('hidden');
   document.getElementById('delay-hint').classList.remove('visible');
+  const ringEl=document.getElementById('ring');
+  if(_maxTestMode){ ringEl.classList.add('max-test'); ringEl.style.strokeDashoffset=''; }
   tick();
 }
 
@@ -120,13 +124,15 @@ function stopTimer(){
   lastDur=elapsed;
   document.getElementById('tap-btn').textContent='Start Hang';
   document.getElementById('tap-btn').classList.remove('running');
-  document.getElementById('ring').classList.add('paused');
+  const _ring=document.getElementById('ring');
+  _ring.classList.add('paused'); _ring.classList.remove('max-test');
+  document.getElementById('delay-hint').classList.remove('visible');
+  document.getElementById('cue-card').classList.add('hidden');
+  if(_maxTestMode){ _maxTestMode=false; _handleMaxTestResult(lastDur); return; }
   document.getElementById('presave-sec').textContent=(lastDur/1000).toFixed(1);
   document.getElementById('presave-unit').textContent='seconds';
   updatePostTimerContext(lastDur/1000, target, getActiveLevel());
   document.getElementById('post-timer').classList.add('visible');
-  document.getElementById('delay-hint').classList.remove('visible');
-  document.getElementById('cue-card').classList.add('hidden');
 }
 
 function adjustRep(delta){
@@ -200,8 +206,9 @@ function cancelCountdown(){
 
 function saveRepSession(){
   lastDur=currentReps; // store reps as "duration" value
+  if(_maxTestMode){ _maxTestMode=false; currentReps=0; document.getElementById('rep-num').textContent='0'; _handleMaxTestResult(lastDur); return; }
   const s=getSettings();
-  const target=computeProgression(getSessions(),s,3).targetVal;
+  const target=computeProgression(getCycleSessions(getSessions(),getState()),s,3).targetVal;
   document.getElementById('presave-sec').textContent=currentReps;
   document.getElementById('presave-unit').textContent='reps';
   updatePostTimerContext(currentReps, target, 3);
@@ -217,6 +224,7 @@ function tick(){
   const s=Math.floor(totalSec), ms=Math.floor((totalSec-s)*10);
   document.getElementById('timer-sec').textContent=s;
   document.getElementById('timer-ms').textContent='.'+ms;
+  if(_maxTestMode){ raf=requestAnimationFrame(tick); return; }
   const target=_timerTarget;
   const ring=document.getElementById('ring'), ov=document.getElementById('ring-overflow');
   if(totalSec<target){
@@ -237,8 +245,9 @@ function resetTimer(){
   elapsed=0;
   document.getElementById('timer-sec').textContent='0';
   document.getElementById('timer-ms').textContent='.0';
-  document.getElementById('ring').style.strokeDashoffset=RING_C;
-  document.getElementById('ring').classList.remove('paused','over-target');
+  const ringEl=document.getElementById('ring');
+  ringEl.classList.remove('paused','over-target','max-test');
+  ringEl.style.strokeDashoffset=RING_C;
   const ov=document.getElementById('ring-overflow');
   ov.style.opacity='0'; ov.style.strokeDashoffset=RING_C;
 }
@@ -279,10 +288,94 @@ function saveSession(){
 
 function discardSession(){
   lastDur=null;
+  _restoreSaveBtn();
   document.getElementById('post-timer').classList.remove('visible');
   resetTimer();
   document.getElementById('cue-card').classList.remove('hidden');
   if(getActiveLevel()!==3){ showDelayBtn(); maybeShowDelayHint(); }
+}
+
+// ═══════════════════════════════════════════════════
+//  MAX TEST
+// ═══════════════════════════════════════════════════
+function _restoreSaveBtn(){
+  const btn=document.getElementById('save-btn');
+  if(btn.textContent==='Save as max'){
+    btn.textContent='Save this session'; btn.onclick=saveSession;
+    document.getElementById('postsave-header').textContent='Nice work!';
+    document.getElementById('timer-target-lbl').classList.remove('max-test');
+  }
+}
+
+function _handleMaxTestResult(rawDur){
+  const lvl=getActiveLevel();
+  const isReps=lvl===3;
+  const valDisplay=isReps?rawDur:(rawDur/1000).toFixed(1);
+  const unit=isReps?' reps':'s';
+  document.getElementById('postsave-header').textContent='Max test result';
+  document.getElementById('postsave-context').textContent=`${valDisplay}${unit} — tap below to save`;
+  document.getElementById('postsave-context').style.color='var(--accent)';
+  document.getElementById('presave-sec').textContent=valDisplay;
+  document.getElementById('presave-unit').textContent=isReps?'reps':'seconds';
+  const btn=document.getElementById('save-btn');
+  btn.textContent='Save as max'; btn.onclick=saveMaxResult;
+  document.getElementById('post-timer').classList.add('visible');
+}
+
+function saveMaxResult(){
+  if(lastDur===null) return;
+  const lvl=getActiveLevel();
+  const s=getSettings();
+  const isReps=lvl===3;
+  const maxKey=lvl===1?'maxSecL1':lvl===2?'maxSecL2':'maxRepsL3';
+  const startKey=lvl===1?'startSecL1':lvl===2?'startSecL2':'startRepsL3';
+  const maxVal=isReps?Math.round(lastDur):parseFloat((lastDur/1000).toFixed(1));
+  s[maxKey]=maxVal;
+  // Calibrate working target to 45% of max, clamped to LIMITS
+  const [sMin,sMax]=LIMITS[startKey];
+  s[startKey]=Math.min(sMax,Math.max(sMin,isReps?Math.round(maxVal*0.45):Math.round(maxVal*0.45)));
+  saveSettings(s);
+  lastDur=null;
+  _restoreSaveBtn();
+  document.getElementById('postsave-context').style.color='';
+  document.getElementById('post-timer').classList.remove('visible');
+  document.getElementById('timer-target-lbl').classList.remove('max-test');
+  resetTimer();
+  refreshTimerUI();
+  if(getActiveLevel()!==3){ showDelayBtn(); }
+  renderSettings(s);
+  const unit=isReps?' reps':'s';
+  showToast(`Max saved ✓ — target set to ${s[startKey]}${unit}`);
+}
+
+function startMaxTest(level){
+  _maxTestMode=true;
+  _levelupDismissedThisSession=false;
+  const st=getState(); st.level=level; saveState(st);
+  applyLevelTheme(level);
+  document.getElementById('timer-target-lbl').textContent='MAX TEST — no limit';
+  document.getElementById('timer-target-lbl').classList.add('max-test');
+  refreshTimerUI();
+  showScreen('timer');
+}
+
+// ═══════════════════════════════════════════════════
+//  CYCLE
+// ═══════════════════════════════════════════════════
+function getCycleSessions(sessions, state){
+  if(!state||!state.cycleStartDate) return sessions;
+  return sessions.filter(x=>x.ts>=state.cycleStartDate);
+}
+
+function startNewCycle(){
+  const st=getState(); st.cycleStartDate=Date.now(); st.cycleEndTarget=null; saveState(st);
+  refreshTimerUI(); renderSettings(getSettings()); showToast('New cycle started!');
+}
+
+function endCycle(){
+  const st=getState(), s=getSettings(), lvl=st.level;
+  const prog=computeProgression(getCycleSessions(getSessions(),st),s,lvl);
+  st.cycleEndTarget=prog.targetVal; saveState(st);
 }
 
 // ═══════════════════════════════════════════════════
@@ -395,45 +488,109 @@ function computeStreak(sessions, settings, level){
   return streak;
 }
 
+function updateLastSetLabel(){
+  const lvl=getActiveLevel();
+  const sessions=getSessions();
+  const lastSetEl=document.getElementById('last-set-label');
+  const restUntilEl=document.getElementById('rest-until-label');
+  if(!lastSetEl) return;
+  const allLvlSessions=sessions.filter(x=>(x.level||1)===lvl);
+  if(!allLvlSessions.length){ lastSetEl.textContent=''; if(restUntilEl) restUntilEl.textContent=''; return; }
+  const lastTs=allLvlSessions[allLvlSessions.length-1].ts;
+  const mins=Math.round((Date.now()-lastTs)/60000);
+  if(mins<1){lastSetEl.textContent='Last set: just now';lastSetEl.className='too-soon';}
+  else if(mins<60){lastSetEl.textContent=`Last set: ${mins} min ago`;lastSetEl.className=mins<15?'too-soon':mins<=120?'ideal':'neutral';}
+  else{const hrs=Math.floor(mins/60),rm=mins%60;lastSetEl.textContent=`Last set: ${hrs}h ${rm}m ago`;lastSetEl.className='neutral';}
+  if(restUntilEl){
+    const restUntilMs=lastTs+60*60*1000;
+    if(Date.now()<restUntilMs){
+      const d=new Date(restUntilMs);
+      const hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
+      restUntilEl.textContent=`Recommended rest until: ${hh}:${mm}`;
+    } else { restUntilEl.textContent=''; }
+  }
+}
+
 // ═══════════════════════════════════════════════════
 //  TIMER UI REFRESH
 // ═══════════════════════════════════════════════════
 function refreshTimerUI(){
   const sessions=getSessions(), s=getSettings(), lvl=getActiveLevel();
-  const prog=computeProgression(sessions,s,lvl);
+  const st=getState();
+  const cycleStatus=computeCycleStatus(st,s);
+
+  // Auto-freeze target when deload begins
+  if(cycleStatus.isDeload&&st.cycleEndTarget===null) endCycle();
+  const st2=getState(); // re-read after potential endCycle mutation
+
+  const progSessions=getCycleSessions(sessions,st2);
+  const prog=computeProgression(progSessions,s,lvl);
+  const displayTarget=(cycleStatus.isDeload&&st2.cycleEndTarget!==null)?st2.cycleEndTarget:prog.targetVal;
+
   const todayKey=dayKey(new Date());
   const lvlSessions=sessions.filter(x=>(x.level||1)===lvl);
   const todayN=lvlSessions.filter(x=>dayKey(new Date(x.ts))===todayKey).length;
-  const minH=s.minHangsPerDay;
-  const bonus=todayN>=minH+1, onTarget=todayN>=minH;
+  const minH=s.minHangsPerDay, partialMin=s.partialHangsMin||4;
 
+  // Wave loading: determine today's recommended sessions
+  let sessionTarget=minH, waveLabel=`target: ${minH}`;
+  if(cycleStatus.active&&!cycleStatus.isComplete){
+    const wave=computeWaveDayTarget(st2.cycleStartDate,s);
+    if(cycleStatus.isDeload){
+      waveLabel=`DELOAD · ${s.waveLowSessions}`; sessionTarget=s.waveLowSessions;
+    } else if(wave.type==='rest'){
+      waveLabel='REST DAY'; sessionTarget=0;
+    } else {
+      waveLabel=`${wave.type.toUpperCase()} · ${wave.sessionTarget}`; sessionTarget=wave.sessionTarget;
+    }
+  }
+
+  const isBoost=todayN>=minH+1, onTarget=todayN>=minH, isPartial=todayN>=partialMin;
   const fill=document.getElementById('today-fill');
-  fill.style.width=Math.min(100,(todayN/minH)*100)+'%';
-  fill.classList.toggle('bonus',bonus);
+  fill.style.width=(sessionTarget>0?Math.min(100,(todayN/sessionTarget)*100):0)+'%';
+  fill.classList.toggle('bonus',isBoost);
   document.getElementById('today-count-label').textContent=`${todayN} session${todayN!==1?'s':''} today`;
   const spark=document.getElementById('bonus-spark');
-  spark.textContent=bonus?'✦ bonus':''; spark.style.opacity=bonus?'1':'0'; spark.style.color='#fff';
+  let sparkLabel='', sparkClass='';
+  if(isBoost)         { sparkLabel='✦ boost';           sparkClass='bonus'; }
+  else if(onTarget)   { sparkLabel='✓ on target';        sparkClass='on-target'; }
+  else if(isPartial)  { sparkLabel='◐ some improvement'; sparkClass='partial'; }
+  else if(todayN>0)   { sparkLabel='✗ no change';        sparkClass='warn'; }
+  spark.textContent=sparkLabel; spark.style.opacity=sparkLabel?'1':'0'; spark.className=sparkClass;
   const tl=document.getElementById('today-target-label');
-  tl.textContent=`target: ${minH}`; tl.className=bonus?'bonus':onTarget?'on-target':todayN>0?'warn':'';
+  tl.textContent=waveLabel; tl.className='';
 
   const unit=lvl===3?'reps':'s';
-  document.getElementById('timer-target-lbl').textContent=`target ${prog.targetVal}${unit}`;
-  if(lvl===3) document.getElementById('rep-target-lbl').textContent=`target ${prog.targetVal} reps`;
+  if(!_maxTestMode){
+    document.getElementById('timer-target-lbl').textContent=`target ${displayTarget}${unit}`;
+    document.getElementById('timer-target-lbl').classList.remove('max-test');
+  }
+  if(lvl===3) document.getElementById('rep-target-lbl').textContent=`target ${displayTarget} reps`;
 
   const streakEl = document.getElementById('streak-label');
   const streak = computeStreak(sessions, s, lvl);
   streakEl.textContent = streak > 0 ? streak + ' day streak' : '';
 
+  const { isRestDay, nextIsRestDay } = computeRestDayStatus(sessions, s, lvl);
+  const rb = document.getElementById('rest-banner');
+  if (isRestDay)          { rb.textContent = 'Rest day — recover and come back tomorrow'; rb.className = 'rest-banner rest-today'; }
+  else if (nextIsRestDay) { rb.textContent = 'Tomorrow is your rest day'; rb.className = 'rest-banner rest-next'; }
+  else                    { rb.textContent = ''; rb.className = 'rest-banner'; }
+
+  // Cycle banner
+  const cb=document.getElementById('cycle-banner');
+  if(cycleStatus.isComplete){
+    cb.className='cycle-banner cycle-complete';
+    cb.innerHTML=`Cycle complete! Retest your max, then start a new cycle.<div class="cycle-banner-btns"><button class="cycle-banner-btn" onclick="startMaxTest(${lvl})">Retest max</button><button class="cycle-banner-btn primary" onclick="startNewCycle()">New cycle</button></div>`;
+  } else if(cycleStatus.isDeload){
+    cb.className='cycle-banner cycle-deload';
+    cb.textContent=`Deload week — reduce volume (${cycleStatus.daysRemaining}d left)`;
+  } else {
+    cb.className='cycle-banner'; cb.textContent='';
+  }
+
   // last-set elapsed time
-  const lastSetEl=document.getElementById('last-set-label');
-  const allLvlSessions=sessions.filter(x=>(x.level||1)===lvl);
-  if(allLvlSessions.length){
-    const lastTs=allLvlSessions[allLvlSessions.length-1].ts;
-    const mins=Math.round((Date.now()-lastTs)/60000);
-    if(mins<1){lastSetEl.textContent='Last set: just now';lastSetEl.className='too-soon';}
-    else if(mins<60){lastSetEl.textContent=`Last set: ${mins} min ago`;lastSetEl.className=mins<15?'too-soon':mins<=120?'ideal':'neutral';}
-    else{const hrs=Math.floor(mins/60),rm=mins%60;lastSetEl.textContent=`Last set: ${hrs}h ${rm}m ago`;lastSetEl.className='neutral';}
-  } else {lastSetEl.textContent='';}
+  updateLastSetLabel();
 
   const cueBody=document.getElementById('cue-body');
   if(cueBody){
@@ -451,6 +608,7 @@ function refreshTimerUI(){
 function adj(key,delta){
   const s=getSettings(); const [mn,mx]=LIMITS[key];
   s[key]=Math.min(mx,Math.max(mn,s[key]+delta));
+  if(!Number.isFinite(s[key])) s[key]=mn;
   saveSettings(s); renderSettings(s); refreshTimerUI();
 }
 
@@ -459,15 +617,61 @@ function renderSettings(s){
   const asBtn=document.getElementById('toggle-autostop');
   if(asBtn){ asBtn.textContent=s.autoStop?'On':'Off'; asBtn.classList.toggle('toggle-on',!!s.autoStop); }
   const lvl=getActiveLevel();
-  const prog=computeProgression(getSessions(),s,lvl);
+  const st=getState();
+  const cycleStatus=computeCycleStatus(st,s);
+  const progSessions=getCycleSessions(getSessions(),st);
+  const prog=computeProgression(progSessions,s,lvl);
+  const displayTarget=(cycleStatus.isDeload&&st.cycleEndTarget!==null)?st.cycleEndTarget:prog.targetVal;
   document.getElementById('sp-level').textContent=`${lvl} — ${LEVEL_NAMES[lvl]}`;
   const unit=lvl===3?'reps':'s';
-  document.getElementById('sp-target').textContent=prog.targetVal+unit;
+  document.getElementById('sp-target').textContent=displayTarget+unit;
   document.getElementById('sp-qual-days').textContent=prog.qualDays;
   const pct=Math.round((prog.daysIntoStep/s.daysPerStep)*100);
   document.getElementById('sp-bar').style.width=pct+'%';
   document.getElementById('sp-bar-label').textContent=
-    `${prog.daysIntoStep} / ${s.daysPerStep} qualifying days → next +${s.stepSec}${unit}`;
+    `${+prog.daysIntoStep.toFixed(1)} / ${s.daysPerStep} qual score → next +${s.stepSec}${unit}`;
+
+  // Max calibration row
+  const maxKey=lvl===1?'maxSecL1':lvl===2?'maxSecL2':'maxRepsL3';
+  const maxVal=s[maxKey]||0;
+  const maxEl=document.getElementById('sp-max');
+  if(maxEl){
+    maxEl.innerHTML=maxVal>0
+      ?`${maxVal}${unit} <button class="inline-retest-btn" onclick="startMaxTest(${lvl})">Retest</button>`
+      :`not tested <button class="inline-retest-btn" onclick="startMaxTest(${lvl})">Test max</button>`;
+  }
+
+  // Step size hint
+  const hintEl=document.getElementById('step-size-hint');
+  if(hintEl){
+    if(maxVal>0){
+      const pctStep=Math.round((s.stepSec/maxVal)*100);
+      const warn=pctStep<3||pctStep>15;
+      hintEl.textContent=`= ${pctStep}% of your max (GtG: 5–10%)`;
+      hintEl.className='step-hint'+(warn?' step-hint-warn':'');
+    } else {
+      hintEl.textContent=''; hintEl.className='step-hint';
+    }
+  }
+
+  // Cycle status row
+  const cycleEl=document.getElementById('sp-cycle');
+  if(cycleEl){
+    if(cycleStatus.active&&!cycleStatus.isComplete){
+      cycleEl.textContent=cycleStatus.isDeload
+        ?`Deload week (${cycleStatus.daysRemaining}d left)`
+        :`Week ${cycleStatus.week} / ${cycleStatus.totalWeeks}`;
+    } else if(cycleStatus.isComplete){
+      cycleEl.textContent='Cycle complete';
+    } else {
+      cycleEl.textContent='No active cycle';
+    }
+  }
+  const startBtn=document.getElementById('sp-start-cycle');
+  if(startBtn) startBtn.style.display=(!cycleStatus.active||cycleStatus.isComplete)?'inline-block':'none';
+  const startRow=document.getElementById('sp-start-cycle-row');
+  if(startRow) startRow.style.display=(!cycleStatus.active||cycleStatus.isComplete)?'flex':'none';
+
   [1,2,3].forEach(n=>{ document.getElementById(`lvl-btn-${n}`).classList.toggle('active-level',n===lvl); });
   updateDelayBtn();
 }
@@ -511,11 +715,12 @@ function renderHistory(){
       if(d<=today){
         const k=dayKey(d),c=allCounts[k]||0;
         const isPast=firstDay&&d>=firstDay&&d<today;
-        if(c>=s.minHangsPerDay+1)                       cell.classList.add('bonus');
-        else if(c>=s.minHangsPerDay)                    cell.classList.add('full');
-        else if(c>0&&c>=Math.ceil(s.minHangsPerDay/2)) cell.classList.add('has-2');
-        else if(c>0)                                    cell.classList.add('has-1');
-        else if(isPast&&c===0)                          cell.classList.add('missed');
+        const partialMin=s.partialHangsMin||4;
+        if(c>=s.minHangsPerDay+1)  cell.classList.add('bonus');
+        else if(c>=s.minHangsPerDay) cell.classList.add('full');
+        else if(c>=partialMin)     cell.classList.add('has-2');
+        else if(c>0)               cell.classList.add('has-1');
+        else if(isPast&&c===0)     cell.classList.add('missed');
       }
       col.appendChild(cell); d.setDate(d.getDate()+1);
       if(d>today&&r<6){for(let r2=r+1;r2<7;r2++){const e=document.createElement('div');e.className='heatmap-cell';col.appendChild(e);}break;}
@@ -634,7 +839,7 @@ function confirmAddSession(){
   const dtVal=document.getElementById('add-datetime').value;
   const ts=dtVal?new Date(dtVal).getTime():Date.now();
   if(isNaN(ts)){showToast('Invalid date');return;}
-  const lvl=parseInt(document.getElementById('add-level').value);
+  const lvl=Math.max(1,Math.min(3,parseInt(document.getElementById('add-level').value)||1));
   const sessions=getSessions();
   sessions.push({ts,duration:Math.round(_addDurVal),level:lvl});
   sessions.sort((a,b)=>a.ts-b.ts);
@@ -649,7 +854,9 @@ function confirmAddSession(){
 function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(name+'-screen').classList.add('active');
+  const scr=document.getElementById(name+'-screen');
+  scr.classList.add('active');
+  scr.scrollTop=0;
   document.getElementById('nav-'+name).classList.add('active');
   if(name==='history')  renderHistory();
   if(name==='settings') renderSettings(getSettings());
@@ -725,7 +932,8 @@ function downloadBackup(){
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  const date = new Date().toISOString().slice(0,10);
+  const _now=new Date();
+  const date=`${_now.getFullYear()}-${String(_now.getMonth()+1).padStart(2,'0')}-${String(_now.getDate()).padStart(2,'0')}`;
   a.href     = url;
   a.download = `hang-backup-${date}.json`;
   document.body.appendChild(a);
@@ -753,7 +961,10 @@ function restoreBackup(event){
         event.target.value=''; return;
       }
       saveSessions(data.sessions);
-      if(data.settings) saveSettings({...DEFAULTS,...data.settings});
+      if(data.settings){
+        const filtered=Object.fromEntries(Object.entries(data.settings).filter(([k])=>k in DEFAULTS));
+        saveSettings({...DEFAULTS,...filtered});
+      }
       if(data.state)    saveState(data.state);
       event.target.value='';
       refreshTimerUI();
@@ -779,11 +990,15 @@ if (window.APP_VERSION) document.getElementById('version-badge').textContent = w
 })();
 refreshTimerUI();
 maybeShowDelayHint();
+setInterval(updateLastSetLabel, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && countdownActive) cancelCountdown();
+});
 
 // ═══════════════════════════════════════════════════
 //  SERVICE WORKER + UPDATE DETECTION
 // ═══════════════════════════════════════════════════
-let _swWaiting = null;
+let _swWaiting = null, _bannerDismissed = false;
 
 function applyUpdate() {
   if (_swWaiting) {
@@ -794,10 +1009,12 @@ function applyUpdate() {
 }
 
 function dismissUpdate() {
+  _bannerDismissed = true;
   document.getElementById('update-banner').classList.remove('visible');
 }
 
 function _showUpdateBanner(worker) {
+  if (_bannerDismissed) return;
   _swWaiting = worker;
   document.getElementById('update-banner').classList.add('visible');
 }
@@ -822,6 +1039,7 @@ if ('serviceWorker' in navigator) {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') reg.update();
     });
+
   }).catch(() => { /* SW unavailable (e.g. file:// protocol) — silent */ });
 
   // When the new SW takes control, reload so the fresh files are served
