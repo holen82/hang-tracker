@@ -474,15 +474,14 @@ function computeStreak(sessions, settings, level){
   const counts = {};
   lvlSessions.forEach(x => { const k = dayKey(new Date(x.ts)); counts[k] = (counts[k] || 0) + 1; });
   const min = settings.minHangsPerDay;
-  const grace = settings.graceDays || 0;
   const d = new Date(); d.setHours(0, 0, 0, 0);
   // Start from yesterday — today is in progress, not yet "complete"
   d.setDate(d.getDate() - 1);
-  let streak = 0, missRun = 0;
+  let streak = 0;
   while (true) {
     const c = counts[dayKey(d)] || 0;
-    if (c >= min) { streak++; missRun = 0; }
-    else { missRun++; if (missRun > grace) break; }
+    if (c >= min) { streak++; }
+    else break;
     d.setDate(d.getDate() - 1);
   }
   return streak;

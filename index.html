@@ -384,25 +384,9 @@
     </div>
 
     <div class="settings-group">
-      <div class="settings-group-title">Miss penalty</div>
+      <div class="settings-group-title">Rest</div>
       <div class="setting-row">
-        <div class="setting-info"><div class="setting-name">Grace days</div><div class="setting-desc">Missed days allowed before penalty applies</div></div>
-        <div class="setting-control">
-          <button class="adj-btn" onclick="adj('graceDays',-1)">−</button>
-          <div><div class="setting-val" id="sv-graceDays">1</div><div class="setting-unit">days</div></div>
-          <button class="adj-btn" onclick="adj('graceDays',1)">+</button>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><div class="setting-name">Penalty per missed day</div><div class="setting-desc">Units deducted from earned progress beyond grace period</div></div>
-        <div class="setting-control">
-          <button class="adj-btn" onclick="adj('penaltySec',-1)">−</button>
-          <div><div class="setting-val" id="sv-penaltySec">2</div><div class="setting-unit">units</div></div>
-          <button class="adj-btn" onclick="adj('penaltySec',1)">+</button>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-info"><div class="setting-name">Rest days per week</div><div class="setting-desc">Planned rest days exempt from penalty — GtG recommends at least 1</div></div>
+        <div class="setting-info"><div class="setting-name">Rest days per week</div><div class="setting-desc">GtG recommends at least 1 rest day per week</div></div>
         <div class="setting-control">
           <button class="adj-btn" onclick="adj('restDaysPerWeek',-1)">−</button>
           <div><div class="setting-val" id="sv-restDaysPerWeek">1</div><div class="setting-unit">days</div></div>
@@ -500,6 +484,75 @@
         </div>
         <p><strong>What you should feel:</strong> A strong contraction in the mid-back and lower traps. The movement range is small — only a few centimetres — but the muscular effort is significant.</p>
         <div class="info-tip"><strong>Quality over quantity:</strong> One perfect shrug with a 2-second hold is worth more than five sloppy ones. If your elbows start bending, stop and rest.</div>
+      </div>
+    </div>
+
+    <!-- GtG Method -->
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--accent)">GtG</div>
+        <div>
+          <div class="info-level-name" style="color:var(--accent)">Grease the Groove</div>
+          <div class="info-level-sub">The method behind this app — strength as a skill</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p><strong>Strength is a skill.</strong> Grease the Groove is a training method by Pavel Tsatsouline built on one idea: the best way to get stronger is to practice the movement frequently, with perfect form, while staying completely fresh. You are not working out — you are practicing.</p>
+        <p>The nervous system learns by repeating high-quality signals. Every clean rep reinforces the neural pathway for that movement. Every sloppy or fatigued rep does the opposite — it programs inefficiency in. GtG maximises quality reps over time.</p>
+        <div class="info-cue">
+          <strong style="color:var(--text)">The cardinal rule:</strong> train as often as possible while staying as fresh as possible.<br><br>
+          ↑ Never train to failure — fatigue degrades form and wires bad patterns<br>
+          ↑ Every rep must be technically clean — stop the set if form slips<br>
+          ↑ Full recovery between sets — minimum 15 min, ideally 1–2 hours<br>
+          ↑ Spread sets throughout the day, not clustered together
+        </div>
+        <p><strong>How this app implements GtG:</strong> each session you log is one practice set. The target shown is the duration (or reps) to aim for — well within your maximum, so every set feels controlled. Hitting your daily session count is what drives progress.</p>
+        <div class="info-tip"><strong>Frequency vs intensity:</strong> a 2019 study found the primary mechanism of early strength gain is increased motor neuron output from the spinal cord — not muscle growth. GtG exploits this by generating high-frequency, high-quality neural signals day after day.</div>
+      </div>
+    </div>
+
+    <!-- Wave Loading -->
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--warn);font-size:24px;letter-spacing:1px">Wave</div>
+        <div>
+          <div class="info-level-name" style="color:var(--warn)">Volume Wave Loading</div>
+          <div class="info-level-sub">High / mid / low days to manage cumulative fatigue</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p>GtG accumulates a lot of daily volume over weeks. To prevent stagnation and overuse, sessions are waved across the week — alternating higher, moderate, and lower session-count days rather than hitting the same number every day.</p>
+        <div class="info-cue" style="border-color:var(--warn)">
+          ↑ <strong style="color:var(--text)">High days</strong> — maximum session count (e.g. 8 sessions)<br>
+          ↑ <strong style="color:var(--text)">Mid days</strong> — standard volume (e.g. 6 sessions)<br>
+          ↑ <strong style="color:var(--text)">Low days</strong> — reduced volume (e.g. 4 sessions)<br>
+          ↑ At least 1 full rest day per week
+        </div>
+        <p>The app shows today's wave target in the progress bar. Partial days (below the full target but above a minimum threshold) count as half-credit — some progress, no penalty.</p>
+        <div class="info-tip"><strong>Space your sets:</strong> 6 sessions in 6 hours (one per hour) builds the groove. 6 sessions in 90 minutes is just a fatiguing workout that defeats the purpose.</div>
+      </div>
+    </div>
+
+    <!-- Cycles & Progression -->
+    <div class="info-level">
+      <div class="info-level-header">
+        <div class="info-level-num" style="color:var(--l2);font-size:22px;letter-spacing:1px">Cycle</div>
+        <div>
+          <div class="info-level-name" style="color:var(--l2)">Cycles &amp; Progression</div>
+          <div class="info-level-sub">How the target grows — and what happens when you miss days</div>
+        </div>
+      </div>
+      <div class="info-body">
+        <p>A GtG cycle runs 4–8 weeks. Within each cycle, your target increases automatically based on qualifying days — days where you hit the full session target. After the cycle ends, take a deload week, then start fresh.</p>
+        <div class="info-cue" style="border-color:var(--l2)">
+          ↑ <strong style="color:var(--text)">Qualifying day</strong> — hit the full session target → earns a step toward the next target increase<br>
+          ↑ <strong style="color:var(--text)">Partial day</strong> — above the minimum threshold but below target → neutral (no gain, no penalty)<br>
+          ↑ <strong style="color:var(--text)">Missed day</strong> — zero sessions → no penalty within the grace window<br>
+          ↑ <strong style="color:var(--text)">Extended miss</strong> — consecutive misses beyond the grace days → small target reduction<br>
+          ↑ <strong style="color:var(--text)">Step increase</strong> — every N qualifying days the target rises by the step size
+        </div>
+        <p>Grace days exist because life happens. Missing one or two days does not punish you — consistent multi-day absence does, gently. The floor is always your starting target, so you can never lose all your progress.</p>
+        <div class="info-tip"><strong>Test your max</strong> at the start of each cycle, the midpoint, and the end. GtG research (Mountain Tactical Institute, 2020) found 35–49% pull-up and push-up gains over 3.5 weeks — but only in participants who tracked their progress consistently.</div>
       </div>
     </div>
 
