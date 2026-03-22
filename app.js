@@ -102,7 +102,7 @@ function updatePostTimerContext(val, target, lvl){
   const ctx=document.getElementById('postsave-context');
   if(!target){ctx.textContent='';return;}
   const unit=lvl===3?' reps':'s';
-  const sessions=getSessions().filter(x=>(x.level||1)===lvl);
+  const sessions=getSessions().filter(x=>(x.level||1)===lvl&&!x.isMax);
   const rawVal=lvl===3?val:val*1000;
   const prevBest=sessions.length?Math.max(...sessions.map(x=>x.duration)):0;
   if(sessions.length>0&&rawVal>prevBest){
@@ -264,7 +264,7 @@ function saveSession(){
   const lvl=getActiveLevel();
   const sessions=getSessions();
   // Check for personal record before adding
-  const lvlSessions=sessions.filter(x=>(x.level||1)===lvl);
+  const lvlSessions=sessions.filter(x=>(x.level||1)===lvl&&!x.isMax);
   const prevBest=lvlSessions.length?Math.max(...lvlSessions.map(x=>x.duration)):0;
   const newDur=Math.round(lastDur);
   const isPR=lvlSessions.length>0&&newDur>prevBest;
@@ -335,6 +335,8 @@ function saveMaxResult(){
   const [sMin,sMax]=LIMITS[startKey];
   s[startKey]=Math.min(sMax,Math.max(sMin,isReps?Math.round(maxVal*0.45):Math.round(maxVal*0.45)));
   saveSettings(s);
+  const durToSave=isReps?Math.round(lastDur):Math.round(lastDur);
+  const allSess=getSessions(); allSess.push({ts:Date.now(),duration:durToSave,level:lvl,isMax:true}); saveSessions(allSess);
   lastDur=null;
   _restoreSaveBtn();
   document.getElementById('postsave-context').style.color='';
@@ -681,19 +683,21 @@ function renderSettings(s){
 function renderHistory(){
   const sessions=getSessions(), s=getSettings(), lvl=getActiveLevel();
   const prog=computeProgression(sessions,s,lvl);
-  // streak uses current-level sessions
+  // streak uses training sessions only (no max tests)
   const lvlSess=sessions.filter(x=>(x.level||1)===lvl);
-  const counts={}; lvlSess.forEach(x=>{ const k=dayKey(new Date(x.ts)); counts[k]=(counts[k]||0)+1; });
+  const trainSess=lvlSess.filter(x=>!x.isMax);
+  const counts={}; trainSess.forEach(x=>{ const k=dayKey(new Date(x.ts)); counts[k]=(counts[k]||0)+1; });
   let streak=0, dd=new Date(); dd.setHours(0,0,0,0);
   if((counts[dayKey(dd)]||0)<s.minHangsPerDay){ dd.setDate(dd.getDate()-1); if((counts[dayKey(dd)]||0)<s.minHangsPerDay){streak=0;dd=null;} }
   if(dd) while((counts[dayKey(dd)]||0)>=s.minHangsPerDay){streak++;dd.setDate(dd.getDate()-1);}
   const unit=lvl===3?'reps':'s';
+  // best includes max tests
   const best=lvlSess.length?lvl===3?Math.max(...lvlSess.map(x=>x.duration)):((Math.max(...lvlSess.map(x=>x.duration))/1000).toFixed(1)):'0';
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-value">${prog.targetVal}${unit}</div><div class="stat-label">Target</div></div>
     <div class="stat-card"><div class="stat-value">${streak}</div><div class="stat-label">Streak</div></div>
     <div class="stat-card"><div class="stat-value">${best}${unit}</div><div class="stat-label">Best</div></div>
-    <div class="stat-card"><div class="stat-value">${lvlSess.length}</div><div class="stat-label">Sessions</div></div>`;
+    <div class="stat-card"><div class="stat-value">${trainSess.length}</div><div class="stat-label">Sessions</div></div>`;
 
   // heatmap (all sessions, colour by level)
   const allCounts={};
@@ -744,11 +748,12 @@ function renderHistory(){
     const dispUnit=sl===3?'reps':'s';
     const color=LEVEL_COLORS[sl];
     const wrap=document.createElement('div'); wrap.className='session-wrap';
-    const item=document.createElement('div'); item.className=`session-item lvl-${sl}`;
+    const item=document.createElement('div'); item.className=`session-item lvl-${sl}${sess.isMax?' max-effort-item':''}`;
+    const maxBadge=sess.isMax?`<span class="max-effort-badge">max effort</span>`:'';
     item.innerHTML=`
       <div style="display:flex;align-items:center;gap:8px">
         <div class="session-lvl-pip" style="background:${color}"></div>
-        <div><div class="session-date">${dateStr} · ${timeStr}</div></div>
+        <div><div class="session-date">${dateStr} · ${timeStr}${maxBadge}</div></div>
       </div>
       <div class="session-duration">${dispVal}<span>${dispUnit}</span></div>
       <div class="session-dot" style="background:${color}"></div>`;
