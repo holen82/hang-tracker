@@ -91,32 +91,16 @@ describe('computeProgression', () => {
     expect(r.targetVal).toBe(S.startSecL1 + 2 * S.stepSec);
   });
 
-  it('miss within grace period → no penalty', () => {
-    // 7 qual days, then 1 miss (grace=1), then yesterday qual
-    const s = qualDaySessions(7, 1, 9); // days 9..3 ago
-    // miss day 2, qual day 1
-    for (let j = 0; j < DEFAULTS.minHangsPerDay; j++) s.push(makeSession(1));
-    const r = computeProgression(s, { ...S, graceDays: 1 }, 1);
-    // 8 qual days = 1 step (floor(8/7)=1)
-    expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
+  it('max calibrated: startVal becomes 40% of maxSecL1 when higher than configuredStart', () => {
+    // maxSecL1=60 → 40% = 24 > configuredStart(8) → targetVal = 24
+    const r = computeProgression([], { ...S, maxSecL1: 60 }, 1);
+    expect(r.targetVal).toBe(24);
   });
 
-  it('miss beyond grace → penalty applied', () => {
-    // 7 qual days (days 9..3 ago), then days 2 and 1 missed (2 consecutive misses)
-    // grace=1: first miss → within grace (no penalty), second → penalised
-    // earned = floor(7/7)*2 = 2; penalty = 1*2 = 2; targetVal = max(8, 8+2-2) = 8
-    const s = qualDaySessions(7, 1, 9);
-    const settings = { ...S, graceDays: 1, penaltySec: 2, restDaysPerWeek: 0 };
-    const r = computeProgression(s, settings, 1);
+  it('max calibrated: configuredStart wins when 40% of max is lower', () => {
+    // maxSecL1=10 → 40% = 4 < configuredStart(8) → stays at 8
+    const r = computeProgression([], { ...S, maxSecL1: 10 }, 1);
     expect(r.targetVal).toBe(S.startSecL1);
-  });
-
-  it('penalty never goes below startVal', () => {
-    // Many missed days with high penalty
-    const s = qualDaySessions(1, 1, 30); // one qual day far back
-    const settings = { ...S, penaltySec: 100, graceDays: 0, restDaysPerWeek: 0 };
-    const r = computeProgression(s, settings, 1);
-    expect(r.targetVal).toBeGreaterThanOrEqual(settings.startSecL1);
   });
 
   it('no-change days (1 to partialHangsMin-1) are neutral — no penalty, no qual', () => {
@@ -126,7 +110,7 @@ describe('computeProgression', () => {
     s.push(makeSession(2));
     s.push(makeSession(1));
     const r = computeProgression(s, S, 1);
-    // 7 qual + 3 neutral = 7 qual, 0 penalty
+    // 7 qual + 3 neutral = 7 qual, target = 1 step
     expect(r.qualDays).toBe(7);
     expect(r.targetVal).toBe(S.startSecL1 + S.stepSec);
   });
