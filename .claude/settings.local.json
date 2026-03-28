@@ -21,7 +21,8 @@
       "WebFetch(domain:www.hubermanlab.com)",
       "WebFetch(domain:pursueperformance.com)",
       "WebFetch(domain:link.springer.com)",
-      "WebFetch(domain:mtntactical.com)"
+      "WebFetch(domain:mtntactical.com)",
+      "Bash(npx vitest:*)"
     ]
   }
 }

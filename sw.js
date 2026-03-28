@@ -1,4 +1,4 @@
-const CACHE = 'hang-v39';
+const CACHE = 'hang-v41';
 
 const APP_SHELL = [
   './',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './styles.css',
   './lib.js',
   './app.js',
+  './ble.js',
   './manifest.json',
   './apple-touch-icon.png'
 ];

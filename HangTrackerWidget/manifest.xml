@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<iq:manifest xmlns:iq="http://www.garmin.com/xml/connectiq" version="5">
+    <iq:application
+        id="a3421b56-7890-cdef-0123-456789abcdef"
+        type="widget"
+        name="HangTracker"
+        entry="HangTrackerApp"
+        launcherIcon="resource://Rez.Drawables.LauncherIcon"
+        minApiLevel="4.0.0">
+
+        <iq:permissions>
+            <iq:uses-permission id="BluetoothLowEnergy"/>
+            <iq:uses-permission id="Sensor"/>
+        </iq:permissions>
+
+        <iq:languages>
+            <iq:language>eng</iq:language>
+        </iq:languages>
+
+        <iq:devices>
+            <iq:device id="fr255"/>
+            <iq:device id="fr255m"/>
+            <iq:device id="fr255s"/>
+            <iq:device id="fr255sm"/>
+            <iq:device id="fr955"/>
+        </iq:devices>
+
+        <iq:barrels/>
+    </iq:application>
+</iq:manifest>

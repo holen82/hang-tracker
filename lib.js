@@ -77,17 +77,18 @@ export function computeRestDayStatus(sessions, s, level) {
   }
 
   const trainingTarget = 7 - restPerWeek;
-  const isRestDay     = weekTrainingDays >= trainingTarget;
-  const nextIsRestDay = weekTrainingDays === trainingTarget - 1;
+  const todayTrained  = (counts[dayKey(today)] || 0) >= partialHangsMin;
+  const isRestDay     = !todayTrained && weekTrainingDays >= trainingTarget;
+  const nextIsRestDay = todayTrained && weekTrainingDays >= trainingTarget;
   return { isRestDay, nextIsRestDay };
 }
 
-export function computeWaveDayTarget(cycleStartDate, s) {
+export function computeWaveDayTarget(cycleStartDate, s, refDate) {
   if (!cycleStartDate) return { type: null, sessionTarget: null };
 
-  const today = new Date(); today.setHours(0,0,0,0);
+  const day = refDate ? new Date(refDate) : new Date(); day.setHours(0,0,0,0);
   const start = new Date(cycleStartDate); start.setHours(0,0,0,0);
-  const cycleDay = Math.floor((today - start) / 86400000);
+  const cycleDay = Math.floor((day - start) / 86400000);
   const dayInWave = cycleDay % 7;
 
   if (dayInWave === 6) return { type: 'rest', sessionTarget: 0 };

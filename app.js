@@ -133,6 +133,7 @@ function stopTimer(){
   document.getElementById('presave-unit').textContent='seconds';
   updatePostTimerContext(lastDur/1000, target, getActiveLevel());
   document.getElementById('post-timer').classList.add('visible');
+  document.getElementById('tap-btn-wrap').classList.add('hidden');
 }
 
 function adjustRep(delta){
@@ -215,6 +216,7 @@ function saveRepSession(){
   currentReps=0;
   document.getElementById('rep-num').textContent='0';
   document.getElementById('post-timer').classList.add('visible');
+  document.getElementById('tap-btn-wrap').classList.add('hidden');
 }
 
 function tick(){
@@ -271,8 +273,10 @@ function saveSession(){
   // duration: ms for l1/l2, raw reps for l3
   sessions.push({ ts:Date.now(), duration:newDur, level:lvl });
   saveSessions(sessions);
+  if (typeof bleIsConnected === 'function' && bleIsConnected()) bleSyncTarget();
   lastDur=null;
   document.getElementById('post-timer').classList.remove('visible');
+  document.getElementById('tap-btn-wrap').classList.remove('hidden');
   resetTimer();
   refreshTimerUI();
   document.getElementById('cue-card').classList.remove('hidden');
@@ -290,6 +294,7 @@ function discardSession(){
   lastDur=null;
   _restoreSaveBtn();
   document.getElementById('post-timer').classList.remove('visible');
+  document.getElementById('tap-btn-wrap').classList.remove('hidden');
   resetTimer();
   document.getElementById('cue-card').classList.remove('hidden');
   if(getActiveLevel()!==3){ showDelayBtn(); maybeShowDelayHint(); }
@@ -320,6 +325,7 @@ function _handleMaxTestResult(rawDur){
   const btn=document.getElementById('save-btn');
   btn.textContent='Save as max'; btn.onclick=saveMaxResult;
   document.getElementById('post-timer').classList.add('visible');
+  document.getElementById('tap-btn-wrap').classList.add('hidden');
 }
 
 function saveMaxResult(){
@@ -341,6 +347,7 @@ function saveMaxResult(){
   _restoreSaveBtn();
   document.getElementById('postsave-context').style.color='';
   document.getElementById('post-timer').classList.remove('visible');
+  document.getElementById('tap-btn-wrap').classList.remove('hidden');
   document.getElementById('timer-target-lbl').classList.remove('max-test');
   resetTimer();
   refreshTimerUI();
@@ -546,7 +553,7 @@ function refreshTimerUI(){
     }
   }
 
-  const isBoost=todayN>=minH+1, onTarget=todayN>=minH, isPartial=todayN>=partialMin;
+  const isBoost=todayN>=sessionTarget+1, onTarget=todayN>=sessionTarget, isPartial=todayN>=partialMin;
   const fill=document.getElementById('today-fill');
   fill.style.width=(sessionTarget>0?Math.min(100,(todayN/sessionTarget)*100):0)+'%';
   fill.classList.toggle('bonus',isBoost);
@@ -693,11 +700,35 @@ function renderHistory(){
   const unit=lvl===3?'reps':'s';
   // best includes max tests
   const best=lvlSess.length?lvl===3?Math.max(...lvlSess.map(x=>x.duration)):((Math.max(...lvlSess.map(x=>x.duration))/1000).toFixed(1)):'0';
+  // Build forecast tile for next 3 days
+  const st=getState();
+  const cycleStatus=computeCycleStatus(st,s);
+  let forecastHtml='';
+  if(cycleStatus.active&&!cycleStatus.isComplete){
+    const days=[];
+    for(let i=1;i<=3;i++){
+      const fd=new Date(); fd.setHours(0,0,0,0); fd.setDate(fd.getDate()+i);
+      const dayLabel=fd.toLocaleDateString('default',{weekday:'short'});
+      if(cycleStatus.isDeload){
+        days.push(`<div class="forecast-day"><div class="forecast-day-name">${dayLabel}</div><div class="forecast-day-val deload">${s.waveLowSessions}</div><div class="forecast-day-type">deload</div></div>`);
+      } else {
+        const wave=computeWaveDayTarget(st.cycleStartDate,s,fd);
+        if(wave.type==='rest'){
+          days.push(`<div class="forecast-day"><div class="forecast-day-name">${dayLabel}</div><div class="forecast-day-val rest">—</div><div class="forecast-day-type">rest</div></div>`);
+        } else {
+          days.push(`<div class="forecast-day"><div class="forecast-day-name">${dayLabel}</div><div class="forecast-day-val">${wave.sessionTarget}</div><div class="forecast-day-type">${wave.type}</div></div>`);
+        }
+      }
+    }
+    forecastHtml=`<div class="stat-card forecast-card"><div class="stat-label">Next 3 days</div><div class="forecast-days">${days.join('')}</div></div>`;
+  }
+
   document.getElementById('stats-row').innerHTML=`
     <div class="stat-card"><div class="stat-value">${prog.targetVal}${unit}</div><div class="stat-label">Target</div></div>
     <div class="stat-card"><div class="stat-value">${streak}</div><div class="stat-label">Streak</div></div>
     <div class="stat-card"><div class="stat-value">${best}${unit}</div><div class="stat-label">Best</div></div>
-    <div class="stat-card"><div class="stat-value">${trainSess.length}</div><div class="stat-label">Sessions</div></div>`;
+    <div class="stat-card"><div class="stat-value">${trainSess.length}</div><div class="stat-label">Sessions</div></div>
+    ${forecastHtml}`;
 
   // heatmap (all sessions, colour by level)
   const allCounts={};
@@ -994,6 +1025,7 @@ if (window.APP_VERSION) document.getElementById('version-badge').textContent = w
 })();
 refreshTimerUI();
 maybeShowDelayHint();
+if (typeof bleInit === 'function') bleInit();
 setInterval(updateLastSetLabel, 30000);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden' && countdownActive) cancelCountdown();

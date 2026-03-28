@@ -133,7 +133,7 @@ body.lvl-3 .ring-fill.over-target{stroke:#fff}
 #tap-btn.running{background:var(--danger);color:#fff}
 #tap-delay{width:62px;padding:0;border:none;border-left:2px solid rgba(0,0,0,0.15);background:var(--accent);color:#0a0a0a;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0;transition:background 0.2s,filter 0.15s;user-select:none;-webkit-user-select:none}
 #tap-delay:active{filter:brightness(0.85)}
-#tap-delay.hidden{display:none}
+#tap-btn-wrap.hidden,#tap-delay.hidden{display:none}
 .tap-delay-sec{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.04em;line-height:1}
 .tap-delay-lbl{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.65}
 body.lvl-2 #tap-btn{background:var(--l2)}
@@ -186,6 +186,14 @@ body.lvl-3 #tap-delay{background:var(--l3)}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;display:flex;flex-direction:column;gap:4px}
 .stat-value{font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-0.5px}
 .stat-label{font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+.forecast-card{grid-column:1/-1}
+.forecast-days{display:flex;gap:10px;margin-top:6px}
+.forecast-day{flex:1;text-align:center;background:var(--bg);border-radius:8px;padding:10px 6px}
+.forecast-day-name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.forecast-day-val{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;color:var(--accent);line-height:1.2}
+.forecast-day-val.rest{color:var(--muted)}
+.forecast-day-val.deload{color:var(--green,#4ade80)}
+.forecast-day-type{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
 .heatmap-wrap{overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
 .heatmap-wrap::-webkit-scrollbar{display:none}
 .heatmap{display:flex;gap:3px}
@@ -315,3 +323,15 @@ body.lvl-3 #tap-delay{background:var(--l3)}
 .update-btn-apply:active{opacity:0.8}
 .update-btn-dismiss{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;cursor:pointer}
 .update-btn-dismiss:active{opacity:0.8}
+
+/* ── BLE bar ── */
+#ble-bar{display:none;align-items:center;gap:10px;margin-bottom:10px;width:100%;max-width:300px}
+#ble-bar.visible{display:flex}
+#ble-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+#ble-btn:active{opacity:0.8}
+#ble-btn .ble-icon{flex-shrink:0}
+#ble-btn.ble-connected{color:var(--accent);border-color:var(--accent-dim)}
+#ble-btn.ble-connected .ble-icon{stroke:var(--accent)}
+#ble-btn.ble-syncing{color:var(--l2);border-color:var(--l2);animation:ble-pulse 1.2s ease-in-out infinite}
+@keyframes ble-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+#ble-sync-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.04em}
