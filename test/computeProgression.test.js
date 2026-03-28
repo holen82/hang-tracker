@@ -232,20 +232,28 @@ describe('computeRestDayStatus', () => {
     expect(r.nextIsRestDay).toBe(false);
   });
 
-  it('6 training days in last 7 → today is rest day', () => {
-    // 6 days in the window (today + 5 past days) each with partialHangsMin sessions
-    const sessions = partialDaySessions(6, 1, 5); // days 5..0
+  it('6 training days in last 7, not today → today is rest day', () => {
+    // 6 past days trained (days 6..1), none today → rest today
+    const sessions = partialDaySessions(6, 1, 6); // days 6..1
     const r = computeRestDayStatus(sessions, S, 1);
     expect(r.isRestDay).toBe(true);
     expect(r.nextIsRestDay).toBe(false);
   });
 
-  it('5 training days in last 7 → tomorrow is rest day', () => {
+  it('6 training days including today → tomorrow is rest day', () => {
+    // 5 past days + today trained → tomorrow is rest
+    const sessions = partialDaySessions(6, 1, 5); // days 5..0
+    const r = computeRestDayStatus(sessions, S, 1);
+    expect(r.isRestDay).toBe(false);
+    expect(r.nextIsRestDay).toBe(true);
+  });
+
+  it('5 training days in last 7, not today → neither', () => {
     // 5 qualifying days in the window (days 5..1), none today
     const sessions = partialDaySessions(5, 1, 5); // days 5..1
     const r = computeRestDayStatus(sessions, S, 1);
     expect(r.isRestDay).toBe(false);
-    expect(r.nextIsRestDay).toBe(true);
+    expect(r.nextIsRestDay).toBe(false);
   });
 
   it('4 training days in last 7 → neither', () => {
