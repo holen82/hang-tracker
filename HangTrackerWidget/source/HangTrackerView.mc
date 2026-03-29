@@ -9,11 +9,9 @@ class HangTrackerView extends WatchUi.View {
     }
 
     function onLayout(dc as Dc) as Void {
-        // No XML layout — we draw everything in onUpdate
     }
 
     function onUpdate(dc as Dc) as Void {
-        // Clear background
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
@@ -41,30 +39,32 @@ class HangTrackerView extends WatchUi.View {
     // ── IDLE ─────────────────────────────────────────
 
     hidden function _drawIdle(dc as Dc, cx as Number, cy as Number) as Void {
-        // "READY" label
+        // Title
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy - 40, Graphics.FONT_MEDIUM, "READY", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Level name
-        var lvlName = _levelName();
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy, Graphics.FONT_SMALL, lvlName, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - 55, Graphics.FONT_SMALL, "HANG TIMER", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Target
-        var targetStr;
-        if (level == 3) {
-            targetStr = targetSec.toString() + " reps";
-        } else {
-            targetStr = targetSec.toString() + "s";
-        }
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 32, Graphics.FONT_SMALL, targetStr, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy - 25, Graphics.FONT_MEDIUM, targetSec.toString() + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Pending sessions count
-        var pCount = pendingSessions.size();
-        if (pCount > 0) {
-            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, cy + 60, Graphics.FONT_XTINY, pCount + " pending", Graphics.TEXT_JUSTIFY_CENTER);
+        // Delay
+        var delayStr;
+        if (delaySec <= 0) {
+            delayStr = "Delay: off";
+        } else {
+            delayStr = "Delay: " + delaySec.toString() + "s";
+        }
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy + 10, Graphics.FONT_SMALL, delayStr, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Controls hint
+        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy + 40, Graphics.FONT_XTINY, "UP/DN adjust", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Log count
+        var logCount = sessionLog.size();
+        if (logCount > 0) {
+            dc.drawText(cx, cy + 58, Graphics.FONT_XTINY, logCount + " logged", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -96,7 +96,7 @@ class HangTrackerView extends WatchUi.View {
         var secs = elapsed / 1000;
         var tenths = (elapsed % 1000) / 100;
 
-        // Elapsed time
+        // Elapsed time — green when target reached
         var timeStr = secs.toString() + "." + tenths.toString();
         var timeColor = Graphics.COLOR_WHITE;
         if (targetSec > 0 && secs >= targetSec) {
@@ -106,14 +106,8 @@ class HangTrackerView extends WatchUi.View {
         dc.drawText(cx, cy - 30, Graphics.FONT_NUMBER_HOT, timeStr, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Target reference
-        var targetStr;
-        if (level == 3) {
-            targetStr = "target: " + targetSec.toString() + " reps";
-        } else {
-            targetStr = "target: " + targetSec.toString() + "s";
-        }
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, cy + 30, Graphics.FONT_XTINY, targetStr, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, cy + 30, Graphics.FONT_XTINY, "target: " + targetSec.toString() + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Stop prompt
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
@@ -126,20 +120,9 @@ class HangTrackerView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, cy - 10, Graphics.FONT_MEDIUM, "Saved!", Graphics.TEXT_JUSTIFY_CENTER);
     }
-
-    // ── Helpers ──────────────────────────────────────
-
-    hidden function _levelName() as String {
-        switch (level) {
-            case 1:  return "L1 Passive Hang";
-            case 2:  return "L2 Active Hang";
-            case 3:  return "L3 Scap Shrugs";
-            default: return "Level " + level.toString();
-        }
-    }
 }
 
-// ── Input delegate: ACTION key = start / stop ────────
+// ── Input delegate ──────────────────────────────────
 
 class HangTrackerInputDelegate extends WatchUi.BehaviorDelegate {
 
@@ -151,13 +134,12 @@ class HangTrackerInputDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onSelect() as Boolean {
-        // ACTION / SELECT button
         var mgr = sessionMgr;
         if (mgr == null) { return false; }
 
         switch (timerState) {
             case STATE_IDLE:
-                mgr.startCountdown();
+                mgr.startHang();
                 return true;
             case STATE_COUNTDOWN:
                 mgr.cancel();
@@ -166,19 +148,114 @@ class HangTrackerInputDelegate extends WatchUi.BehaviorDelegate {
                 mgr.stopSession();
                 return true;
             case STATE_DONE:
-                // Ignore during done animation
                 return true;
         }
         return false;
     }
 
+    // UP button (onPreviousPage) — increase target
+    function onPreviousPage() as Boolean {
+        if (timerState == STATE_IDLE) {
+            targetSec += 1;
+            if (targetSec > 120) { targetSec = 120; }
+            _persistAll();
+            WatchUi.requestUpdate();
+            return true;
+        }
+        return false;
+    }
+
+    // DOWN button (onNextPage) — decrease target
+    function onNextPage() as Boolean {
+        if (timerState == STATE_IDLE) {
+            targetSec -= 1;
+            if (targetSec < 1) { targetSec = 1; }
+            _persistAll();
+            WatchUi.requestUpdate();
+            return true;
+        }
+        return false;
+    }
+
+    // MENU (long-press UP)
+    function onMenu() as Boolean {
+        if (timerState != STATE_IDLE) { return false; }
+
+        var menu = new WatchUi.Menu2({:title => "Hang Timer"});
+        // Delay option — show current value
+        var delayLabel;
+        if (delaySec <= 0) {
+            delayLabel = "Delay: off";
+        } else {
+            delayLabel = "Delay: " + delaySec.toString() + "s";
+        }
+        menu.addItem(new WatchUi.MenuItem(delayLabel, "Cycle: 0/3/5/10", :delay, {}));
+        menu.addItem(new WatchUi.MenuItem("View Log", sessionLog.size() + " sessions", :viewLog, {}));
+        menu.addItem(new WatchUi.MenuItem("Clear Log", "Delete all entries", :clearLog, {}));
+
+        WatchUi.pushView(menu, new HangMenuDelegate(), WatchUi.SLIDE_UP);
+        return true;
+    }
+
     function onBack() as Boolean {
-        // BACK button — cancel if active, otherwise let system handle (exit widget)
         var mgr = sessionMgr;
         if (mgr != null && timerState != STATE_IDLE) {
             mgr.cancel();
             return true;
         }
-        return false;  // Let the system exit the widget
+        return false;
+    }
+}
+
+// ── Menu delegate ───────────────────────────────────
+
+class HangMenuDelegate extends WatchUi.Menu2InputDelegate {
+
+    // Delay values to cycle through
+    hidden var _delayOptions as Array<Number> = [0, 3, 5, 10];
+
+    function initialize() {
+        Menu2InputDelegate.initialize();
+    }
+
+    function onSelect(item as WatchUi.MenuItem) as Void {
+        var id = item.getId();
+
+        if (id == :delay) {
+            // Cycle to next delay value
+            var idx = 0;
+            for (var i = 0; i < _delayOptions.size(); i++) {
+                if (_delayOptions[i] == delaySec) {
+                    idx = i;
+                    break;
+                }
+            }
+            idx = (idx + 1) % _delayOptions.size();
+            delaySec = _delayOptions[idx];
+            _persistAll();
+
+            // Update the menu item label
+            var label;
+            if (delaySec <= 0) {
+                label = "Delay: off";
+            } else {
+                label = "Delay: " + delaySec.toString() + "s";
+            }
+            item.setLabel(label);
+
+        } else if (id == :viewLog) {
+            // Push log view
+            var logView = new LogView();
+            WatchUi.pushView(logView, new LogViewDelegate(logView), WatchUi.SLIDE_LEFT);
+
+        } else if (id == :clearLog) {
+            sessionLog = [] as Array;
+            _persistAll();
+            item.setSubLabel("0 sessions");
+        }
+    }
+
+    function onBack() as Void {
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
     }
 }

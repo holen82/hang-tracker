@@ -100,26 +100,22 @@ If you don't have an icon yet, use any 40x40 PNG as a placeholder.
 4. Fill in description, screenshots, etc.
 5. Submit for review (usually 1-2 business days)
 
-## Testing the BLE connection
+## Testing
 
 ### In simulator
-The Connect IQ simulator does not support real BLE. Test the timer/UI logic only:
-- Press the ACTION button to start countdown → run → stop
+- Press ACTION to start countdown → timer runs → press ACTION to stop → "Saved!"
 - Verify state transitions: IDLE → COUNTDOWN → RUNNING → DONE → IDLE
+- Use UP/DOWN to adjust target time
+- Long-press UP for menu: adjust delay, view log, clear log
 
 ### On real hardware
 1. Sideload widget to FR255/955
 2. Open the widget on the watch (widget glance loop → tap to open)
-3. Verify "READY" screen shows with target + level
-4. Press ACTION → 5s countdown with vibrations → timer runs
+3. Verify IDLE screen shows target time and delay
+4. Press ACTION → countdown with vibrations → timer runs
 5. Press ACTION again → session saved, "Saved!" shown
-6. Open PWA on Android Chrome → tap "Pair Watch" → select "HangTracker"
-7. Watch should sync: PWA writes target/level, reads pending sessions
-8. Confirm toast: "N sessions synced from watch"
+6. Long-press UP → "View Log" → verify session appears with correct time and duration
 
 ## Troubleshooting
 
-- **"BLE not supported" in simulator** — Expected. BLE peripheral mode only works on real hardware.
 - **Widget doesn't appear on watch** — Check `GARMIN/APPS/` has the `.prg` file. Reboot watch if needed.
-- **PWA can't find "HangTracker"** — Make sure the widget is open/running on the watch. BLE advertising only happens while the widget is active.
-- **Sessions not syncing** — Open browser DevTools, check console for `BLE drain` logs. Verify characteristic UUIDs match between `profile.xml` and `ble.js`.

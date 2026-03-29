@@ -18,8 +18,8 @@ class SessionManager {
 
     hidden var _timer      as Timer.Timer;
     hidden var _countdownLeft as Number = 0;
-    hidden var _startMs    as Number = 0;    // moment.value() when session started
-    hidden var _elapsed    as Number = 0;    // running elapsed in ms
+    hidden var _startMs    as Number = 0;
+    hidden var _elapsed    as Number = 0;
     hidden var _hitTarget  as Boolean = false;
 
     // Publicly readable for the view
@@ -30,21 +30,27 @@ class SessionManager {
         _timer = new Timer.Timer();
     }
 
-    // ── Countdown ────────────────────────────────────
+    // ── Start (with or without countdown) ────────────
 
-    function startCountdown() as Void {
+    function startHang() as Void {
         if (timerState != STATE_IDLE) { return; }
 
-        _countdownLeft = 5;
-        countdownLeft  = 5;
-        timerState     = STATE_COUNTDOWN;
-        _hitTarget     = false;
+        _hitTarget = false;
 
-        // Two short buzzes to announce countdown
-        _vibrate([100, 80, 100]);
+        if (delaySec <= 0) {
+            // No countdown — start immediately
+            _startSession();
+        } else {
+            _countdownLeft = delaySec;
+            countdownLeft  = delaySec;
+            timerState     = STATE_COUNTDOWN;
 
-        _timer.start(method(:_onCountdownTick), 1000, true);
-        WatchUi.requestUpdate();
+            // Two short buzzes to announce countdown
+            _vibrate([100, 80, 100]);
+
+            _timer.start(method(:_onCountdownTick), 1000, true);
+            WatchUi.requestUpdate();
+        }
     }
 
     function _onCountdownTick() as Void {
@@ -52,11 +58,9 @@ class SessionManager {
         countdownLeft   = _countdownLeft;
 
         if (_countdownLeft <= 0) {
-            // Countdown done — start the actual session
             _timer.stop();
             _startSession();
         } else {
-            // Tick buzz
             _vibrate([80]);
             WatchUi.requestUpdate();
         }
@@ -81,13 +85,15 @@ class SessionManager {
         _elapsed  = _nowMs() - _startMs;
         elapsedMs = _elapsed;
 
-        // Check if target was just hit
+        // Check if target was just hit — auto-stop
         if (!_hitTarget && targetSec > 0) {
             var targetMs = targetSec * 1000;
             if (_elapsed >= targetMs) {
                 _hitTarget = true;
-                // Two long buzzes (400ms each)
+                // Two long buzzes for target reached
                 _vibrate([400, 200, 400]);
+                stopSession();
+                return;
             }
         }
 
@@ -104,20 +110,13 @@ class SessionManager {
         // One 200ms buzz
         _vibrate([200]);
 
-        // Record session
+        // Record session to log
         var ts = Time.now().value();  // Unix seconds
-        var durValue = durationMs;
-        if (level == 3) {
-            // For level 3, duration is stored as rep count — minimum 1
-            durValue = (durationMs > 0) ? durationMs : 1;
-        }
-
         var sess = {
             "ts"  => ts,
-            "dur" => durValue,
-            "lvl" => level
+            "dur" => durationMs
         };
-        pendingSessions.add(sess);
+        sessionLog.add(sess);
         _persistAll();
 
         WatchUi.requestUpdate();
@@ -144,7 +143,6 @@ class SessionManager {
     // ── Helpers ──────────────────────────────────────
 
     hidden function _nowMs() as Number {
-        // Millisecond-resolution timestamp via System.getTimer()
         return System.getTimer();
     }
 
