@@ -3,27 +3,25 @@
     <iq:application
         id="a3421b56-7890-cdef-0123-456789abcdef"
         type="widget"
-        name="HangTracker"
+        name="@Strings.AppName"
         entry="HangTrackerApp"
-        launcherIcon="resource://Rez.Drawables.LauncherIcon"
+        launcherIcon="@Drawables.LauncherIcon"
         minApiLevel="4.0.0">
 
+        <iq:products>
+            <iq:product id="fr255"/>
+            <iq:product id="fr255m"/>
+            <iq:product id="fr255s"/>
+            <iq:product id="fr255sm"/>
+            <iq:product id="fr955"/>
+        </iq:products>
+
         <iq:permissions>
-            <iq:uses-permission id="BluetoothLowEnergy"/>
-            <iq:uses-permission id="Sensor"/>
         </iq:permissions>
 
         <iq:languages>
             <iq:language>eng</iq:language>
         </iq:languages>
-
-        <iq:devices>
-            <iq:device id="fr255"/>
-            <iq:device id="fr255m"/>
-            <iq:device id="fr255s"/>
-            <iq:device id="fr255sm"/>
-            <iq:device id="fr955"/>
-        </iq:devices>
 
         <iq:barrels/>
     </iq:application>

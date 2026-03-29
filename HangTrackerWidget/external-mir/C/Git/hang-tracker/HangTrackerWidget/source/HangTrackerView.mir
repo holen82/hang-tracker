@@ -1,0 +1,1535 @@
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Graphics,1,14,22]; ]
+import Toybox.Graphics;
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Lang,2,14,18]; ]
+import Toybox.Lang;
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 3; @symbol_importdef<0> = [Toybox,3,7,13]; @symbol_importdef<1> = [WatchUi,3,14,21]; ]
+import Toybox.WatchUi;
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 5; @symbol_classdef = [HangTrackerView,5,6,21]; @symbol_extends<0> = [WatchUi,5,30,37]; @symbol_extends<1> = [View,5,38,42]; ]
+class HangTrackerView extends WatchUi.View {
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 5; ]
+    <init> {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 5; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 7; @symbol_functiondef = [initialize,7,13,23]; ]
+    function initialize() as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_7_26_9_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 8 8 ]
+        symbol [ View %tmp.2 8 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 8 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_7_26_9_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 11; @symbol_functiondef = [onLayout,11,13,21]; @symbol_param<0> = [dc,11,22,24]; @symbol_param<0>_type<0> = [Dc,11,28,30]; ]
+    function onLayout(dc as Dc) as Void {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 14; @symbol_functiondef = [onUpdate,14,13,21]; @symbol_param<0> = [dc,14,22,24]; @symbol_param<0>_type<0> = [Dc,14,28,30]; ]
+    function onUpdate(dc as Dc) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 15 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 15 8 10 ];
+        symbol [ setColor %tmp.2 15 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ Graphics %tmp.3 15 20 28 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.4 15 29 40 ];
+        %tmp.4 = getv %tmp.3 :COLOR_BLACK;
+        symbol [ Graphics %tmp.5 15 42 50 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.6 15 51 62 ];
+        %tmp.6 = getv %tmp.5 :COLOR_BLACK;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 16 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 16 8 10 ];
+        symbol [ clear %tmp.8 16 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 18 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 18 12 13 ];
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 18 16 18 ];
+        symbol [ getWidth %tmp.10 18 19 27 ];
+        %tmp.10 = getv function %tmp.9 :getWidth;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %w.1 %tmp.11;
+        symbol [ w %w.1 18 12 13 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 19 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 19 12 13 ];
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 19 16 18 ];
+        symbol [ getHeight %tmp.13 19 19 28 ];
+        %tmp.13 = getv function %tmp.12 :getHeight;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %h.2 %tmp.14;
+        symbol [ h %h.2 19 12 13 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 20 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_stop" ]
+        %cx.3 = local;
+        symbol [ cx %cx.3 20 12 14 ];
+        %tmp.15 = lgetv %w.1;
+        symbol [ w %tmp.15 20 17 18 ];
+        %tmp.16 = 2;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %cx.3 %tmp.17;
+        symbol [ cx %cx.3 20 12 14 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 21 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_stop" ]
+        %cy.4 = local;
+        symbol [ cy %cy.4 21 12 14 ];
+        %tmp.18 = lgetv %h.2;
+        symbol [ h %tmp.18 21 17 18 ];
+        %tmp.19 = 2;
+        %tmp.20 = div %tmp.18 %tmp.19;
+        lputv %cy.4 %tmp.20;
+        symbol [ cy %cy.4 21 12 14 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 23 8 ]
+        symbol [ timerState %tmp.22 23 16 26 ];
+        %tmp.22 = getv ? :timerState;
+        push %tmp.22;
+        switch %tmp.22 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtBegin:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 24 12 ]
+        %tmp.23 = dup %tmp.22;
+        symbol [ STATE_IDLE %tmp.25 24 17 27 ];
+        %tmp.25 = getv ? :STATE_IDLE;
+        %tmp.26 = getv function %tmp.23 :equals;
+        %tmp.27 = invoke %tmp.23 %tmp.26 (%tmp.25);
+        bt %tmp.27 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_24_12_26_21_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 27 12 ]
+        %tmp.28 = dup %tmp.22;
+        symbol [ STATE_COUNTDOWN %tmp.30 27 17 32 ];
+        %tmp.30 = getv ? :STATE_COUNTDOWN;
+        %tmp.31 = getv function %tmp.28 :equals;
+        %tmp.32 = invoke %tmp.28 %tmp.31 (%tmp.30);
+        bt %tmp.32 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_27_12_29_21_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 30 12 ]
+        %tmp.33 = dup %tmp.22;
+        symbol [ STATE_RUNNING %tmp.35 30 17 30 ];
+        %tmp.35 = getv ? :STATE_RUNNING;
+        %tmp.36 = getv function %tmp.33 :equals;
+        %tmp.37 = invoke %tmp.33 %tmp.36 (%tmp.35);
+        bt %tmp.37 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_30_12_32_21_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 33 12 ]
+        %tmp.38 = dup %tmp.22;
+        symbol [ STATE_DONE %tmp.40 33 17 27 ];
+        %tmp.40 = getv ? :STATE_DONE;
+        %tmp.41 = getv function %tmp.38 :equals;
+        %tmp.42 = invoke %tmp.38 %tmp.41 (%tmp.40);
+        bt %tmp.42 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_33_12_35_21_switchCase;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtDefault:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_defaultCodeBegin;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_24_12_26_21_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 25 16 ]
+        %tmp.43 = self;
+        symbol [ _drawIdle %tmp.44 25 16 25 ];
+        %tmp.44 = getv function %tmp.43 :_drawIdle;
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 25 26 28 ];
+        %tmp.46 = lgetv %cx.3;
+        symbol [ cx %tmp.46 25 30 32 ];
+        %tmp.47 = lgetv %cy.4;
+        symbol [ cy %tmp.47 25 34 36 ];
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 26 16 ]
+        goto break @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_27_12_29_21_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 28 16 ]
+        %tmp.48 = self;
+        symbol [ _drawCountdown %tmp.49 28 16 30 ];
+        %tmp.49 = getv function %tmp.48 :_drawCountdown;
+        %tmp.50 = lgetv %dc;
+        symbol [ dc %tmp.50 28 31 33 ];
+        %tmp.51 = lgetv %cx.3;
+        symbol [ cx %tmp.51 28 35 37 ];
+        %tmp.52 = lgetv %cy.4;
+        symbol [ cy %tmp.52 28 39 41 ];
+        invoke %tmp.48 %tmp.49(%tmp.50, %tmp.51, %tmp.52);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 29 16 ]
+        goto break @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_30_12_32_21_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 31 16 ]
+        %tmp.53 = self;
+        symbol [ _drawRunning %tmp.54 31 16 28 ];
+        %tmp.54 = getv function %tmp.53 :_drawRunning;
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 31 29 31 ];
+        %tmp.56 = lgetv %cx.3;
+        symbol [ cx %tmp.56 31 33 35 ];
+        %tmp.57 = lgetv %cy.4;
+        symbol [ cy %tmp.57 31 37 39 ];
+        invoke %tmp.53 %tmp.54(%tmp.55, %tmp.56, %tmp.57);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 32 16 ]
+        goto break @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_33_12_35_21_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 34 16 ]
+        %tmp.58 = self;
+        symbol [ _drawDone %tmp.59 34 16 25 ];
+        %tmp.59 = getv function %tmp.58 :_drawDone;
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 34 26 28 ];
+        %tmp.61 = lgetv %cx.3;
+        symbol [ cx %tmp.61 34 30 32 ];
+        %tmp.62 = lgetv %cy.4;
+        symbol [ cy %tmp.62 34 34 36 ];
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.61, %tmp.62);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 35 16 ]
+        goto break @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_defaultCodeBegin:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_23_8_36_8_switchStmtEnd:
+        pop;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_14_40_37_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 41; @symbol_functiondef = [_drawIdle,41,20,29]; @symbol_param<0> = [dc,41,30,32]; @symbol_param<0>_type<0> = [Dc,41,36,38]; @symbol_param<1> = [cx,41,40,42]; @symbol_param<1>_type<0> = [Number,41,46,52]; @symbol_param<2> = [cy,41,54,56]; @symbol_param<2>_type<0> = [Number,41,60,66]; ]
+    protected
+    function _drawIdle(dc as Dc, cx as Number, cy as Number) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 43 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 43 8 10 ];
+        symbol [ setColor %tmp.2 43 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ Graphics %tmp.3 43 20 28 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.4 43 29 40 ];
+        %tmp.4 = getv %tmp.3 :COLOR_WHITE;
+        symbol [ Graphics %tmp.5 43 42 50 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.6 43 51 68 ];
+        %tmp.6 = getv %tmp.5 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 44 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 44 8 10 ];
+        symbol [ drawText %tmp.8 44 11 19 ];
+        %tmp.8 = getv function %tmp.7 :drawText;
+        %tmp.9 = lgetv %cx;
+        symbol [ cx %tmp.9 44 20 22 ];
+        %tmp.10 = lgetv %cy;
+        symbol [ cy %tmp.10 44 24 26 ];
+        %tmp.11 = 55;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        symbol [ Graphics %tmp.13 44 33 41 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.14 44 42 52 ];
+        %tmp.14 = getv %tmp.13 :FONT_SMALL;
+        %tmp.15 = "HANG TIMER";
+        symbol [ Graphics %tmp.16 44 68 76 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.17 44 77 96 ];
+        %tmp.17 = getv %tmp.16 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.12, %tmp.14, %tmp.15, %tmp.17);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 47 8 ]
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 47 8 10 ];
+        symbol [ setColor %tmp.19 47 11 19 ];
+        %tmp.19 = getv function %tmp.18 :setColor;
+        symbol [ Graphics %tmp.20 47 20 28 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ COLOR_GREEN %tmp.21 47 29 40 ];
+        %tmp.21 = getv %tmp.20 :COLOR_GREEN;
+        symbol [ Graphics %tmp.22 47 42 50 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.23 47 51 68 ];
+        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
+        invoke %tmp.18 %tmp.19(%tmp.21, %tmp.23);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 48 8 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 48 8 10 ];
+        symbol [ drawText %tmp.25 48 11 19 ];
+        %tmp.25 = getv function %tmp.24 :drawText;
+        %tmp.26 = lgetv %cx;
+        symbol [ cx %tmp.26 48 20 22 ];
+        %tmp.27 = lgetv %cy;
+        symbol [ cy %tmp.27 48 24 26 ];
+        %tmp.28 = 25;
+        %tmp.29 = sub %tmp.27 %tmp.28;
+        symbol [ Graphics %tmp.30 48 33 41 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.31 48 42 53 ];
+        %tmp.31 = getv %tmp.30 :FONT_MEDIUM;
+        symbol [ targetSec %tmp.33 48 55 64 ];
+        %tmp.33 = getv ? :targetSec;
+        symbol [ toString %tmp.34 48 65 73 ];
+        %tmp.34 = getv function %tmp.33 :toString;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        %tmp.36 = "s";
+        %tmp.37 = add %tmp.35 %tmp.36;
+        symbol [ Graphics %tmp.38 48 83 91 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.39 48 92 111 ];
+        %tmp.39 = getv %tmp.38 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.24 %tmp.25(%tmp.26, %tmp.29, %tmp.31, %tmp.37, %tmp.39);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 51 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_stop" ]
+        %delayStr.1 = local;
+        symbol [ delayStr %delayStr.1 51 12 20 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 52 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_stmt:
+        symbol [ delaySec %tmp.41 52 12 20 ];
+        %tmp.41 = getv ? :delaySec;
+        %tmp.42 = 0;
+        %tmp.43 = lte %tmp.41 %tmp.42;
+        bf %tmp.43 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_else_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_27_54_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 53 12 ]
+        %tmp.44 = "Delay: off";
+        lputv %delayStr.1 %tmp.44;
+        symbol [ delayStr %delayStr.1 53 12 20 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_27_54_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_else_false:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_54_15_56_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 55 12 ]
+        %tmp.45 = "Delay: ";
+        symbol [ delaySec %tmp.47 55 35 43 ];
+        %tmp.47 = getv ? :delaySec;
+        symbol [ toString %tmp.48 55 44 52 ];
+        %tmp.48 = getv function %tmp.47 :toString;
+        %tmp.49 = invoke %tmp.47 %tmp.48();
+        %tmp.50 = add %tmp.45 %tmp.49;
+        %tmp.51 = "s";
+        %tmp.52 = add %tmp.50 %tmp.51;
+        lputv %delayStr.1 %tmp.52;
+        symbol [ delayStr %delayStr.1 55 12 20 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_54_15_56_8_stop:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_52_8_56_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 57 8 ]
+        %tmp.53 = lgetv %dc;
+        symbol [ dc %tmp.53 57 8 10 ];
+        symbol [ setColor %tmp.54 57 11 19 ];
+        %tmp.54 = getv function %tmp.53 :setColor;
+        symbol [ Graphics %tmp.55 57 20 28 ];
+        %tmp.55 = getm $.Toybox.Graphics;
+        symbol [ COLOR_LT_GRAY %tmp.56 57 29 42 ];
+        %tmp.56 = getv %tmp.55 :COLOR_LT_GRAY;
+        symbol [ Graphics %tmp.57 57 44 52 ];
+        %tmp.57 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.58 57 53 70 ];
+        %tmp.58 = getv %tmp.57 :COLOR_TRANSPARENT;
+        invoke %tmp.53 %tmp.54(%tmp.56, %tmp.58);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 58 8 ]
+        %tmp.59 = lgetv %dc;
+        symbol [ dc %tmp.59 58 8 10 ];
+        symbol [ drawText %tmp.60 58 11 19 ];
+        %tmp.60 = getv function %tmp.59 :drawText;
+        %tmp.61 = lgetv %cx;
+        symbol [ cx %tmp.61 58 20 22 ];
+        %tmp.62 = lgetv %cy;
+        symbol [ cy %tmp.62 58 24 26 ];
+        %tmp.63 = 10;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        symbol [ Graphics %tmp.65 58 33 41 ];
+        %tmp.65 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.66 58 42 52 ];
+        %tmp.66 = getv %tmp.65 :FONT_SMALL;
+        %tmp.67 = lgetv %delayStr.1;
+        symbol [ delayStr %tmp.67 58 54 62 ];
+        symbol [ Graphics %tmp.68 58 64 72 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.69 58 73 92 ];
+        %tmp.69 = getv %tmp.68 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.59 %tmp.60(%tmp.61, %tmp.64, %tmp.66, %tmp.67, %tmp.69);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 61 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 61 8 10 ];
+        symbol [ setColor %tmp.71 61 11 19 ];
+        %tmp.71 = getv function %tmp.70 :setColor;
+        symbol [ Graphics %tmp.72 61 20 28 ];
+        %tmp.72 = getm $.Toybox.Graphics;
+        symbol [ COLOR_DK_GRAY %tmp.73 61 29 42 ];
+        %tmp.73 = getv %tmp.72 :COLOR_DK_GRAY;
+        symbol [ Graphics %tmp.74 61 44 52 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.75 61 53 70 ];
+        %tmp.75 = getv %tmp.74 :COLOR_TRANSPARENT;
+        invoke %tmp.70 %tmp.71(%tmp.73, %tmp.75);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 62 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 62 8 10 ];
+        symbol [ drawText %tmp.77 62 11 19 ];
+        %tmp.77 = getv function %tmp.76 :drawText;
+        %tmp.78 = lgetv %cx;
+        symbol [ cx %tmp.78 62 20 22 ];
+        %tmp.79 = lgetv %cy;
+        symbol [ cy %tmp.79 62 24 26 ];
+        %tmp.80 = 40;
+        %tmp.81 = add %tmp.79 %tmp.80;
+        symbol [ Graphics %tmp.82 62 33 41 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.83 62 42 52 ];
+        %tmp.83 = getv %tmp.82 :FONT_XTINY;
+        %tmp.84 = "UP/DN adjust";
+        symbol [ Graphics %tmp.85 62 70 78 ];
+        %tmp.85 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.86 62 79 98 ];
+        %tmp.86 = getv %tmp.85 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.81, %tmp.83, %tmp.84, %tmp.86);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 65 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_stop" ]
+        %logCount.2 = local;
+        symbol [ logCount %logCount.2 65 12 20 ];
+        symbol [ sessionLog %tmp.88 65 23 33 ];
+        %tmp.88 = getv ? :sessionLog;
+        symbol [ size %tmp.89 65 34 38 ];
+        %tmp.89 = getv function %tmp.88 :size;
+        %tmp.90 = invoke %tmp.88 %tmp.89();
+        lputv %logCount.2 %tmp.90;
+        symbol [ logCount %logCount.2 65 12 20 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 66 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_8_68_8_if_stmt:
+        %tmp.91 = lgetv %logCount.2;
+        symbol [ logCount %tmp.91 66 12 20 ];
+        %tmp.92 = 0;
+        %tmp.93 = gt %tmp.91 %tmp.92;
+        bf %tmp.93 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_8_68_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_8_68_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_26_68_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 67 12 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 67 12 14 ];
+        symbol [ drawText %tmp.95 67 15 23 ];
+        %tmp.95 = getv function %tmp.94 :drawText;
+        %tmp.96 = lgetv %cx;
+        symbol [ cx %tmp.96 67 24 26 ];
+        %tmp.97 = lgetv %cy;
+        symbol [ cy %tmp.97 67 28 30 ];
+        %tmp.98 = 58;
+        %tmp.99 = add %tmp.97 %tmp.98;
+        symbol [ Graphics %tmp.100 67 37 45 ];
+        %tmp.100 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.101 67 46 56 ];
+        %tmp.101 = getv %tmp.100 :FONT_XTINY;
+        %tmp.102 = lgetv %logCount.2;
+        symbol [ logCount %tmp.102 67 58 66 ];
+        %tmp.103 = " logged";
+        %tmp.104 = add %tmp.102 %tmp.103;
+        symbol [ Graphics %tmp.105 67 80 88 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.106 67 89 108 ];
+        %tmp.106 = getv %tmp.105 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.99, %tmp.101, %tmp.104, %tmp.106);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_26_68_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_8_68_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_66_8_68_8_if_end:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_41_76_69_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 73; @symbol_functiondef = [_drawCountdown,73,20,34]; @symbol_param<0> = [dc,73,35,37]; @symbol_param<0>_type<0> = [Dc,73,41,43]; @symbol_param<1> = [cx,73,45,47]; @symbol_param<1>_type<0> = [Number,73,51,57]; @symbol_param<2> = [cy,73,59,61]; @symbol_param<2>_type<0> = [Number,73,65,71]; ]
+    protected
+    function _drawCountdown(dc as Dc, cx as Number, cy as Number) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 74 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_stop" ]
+        %mgr.1 = local;
+        symbol [ mgr %mgr.1 74 12 15 ];
+        symbol [ sessionMgr %tmp.2 74 18 28 ];
+        %tmp.2 = getv ? :sessionMgr;
+        lputv %mgr.1 %tmp.2;
+        symbol [ mgr %mgr.1 74 12 15 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 75 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_8_75_35_if_stmt:
+        %tmp.3 = lgetv %mgr.1;
+        symbol [ mgr %tmp.3 75 12 15 ];
+        %tmp.4 = null;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_8_75_35_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_8_75_35_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_25_75_35_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 75 27 ]
+        ret ?;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_25_75_35_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_8_75_35_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_75_8_75_35_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 77 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_stop" ]
+        %cdLeft.2 = local;
+        symbol [ cdLeft %cdLeft.2 77 12 18 ];
+        %tmp.6 = lgetv %mgr.1;
+        symbol [ mgr %tmp.6 77 21 24 ];
+        symbol [ countdownLeft %tmp.7 77 25 38 ];
+        %tmp.7 = getv %tmp.6 :countdownLeft;
+        lputv %cdLeft.2 %tmp.7;
+        symbol [ cdLeft %cdLeft.2 77 12 18 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 78 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_stop" ]
+        %text.3 = local;
+        symbol [ text %text.3 78 12 16 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 79 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_stmt:
+        %tmp.8 = lgetv %cdLeft.2;
+        symbol [ cdLeft %tmp.8 79 12 18 ];
+        %tmp.9 = 0;
+        %tmp.10 = lte %tmp.8 %tmp.9;
+        bf %tmp.10 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_else_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_25_81_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 80 12 ]
+        %tmp.11 = "GO!";
+        lputv %text.3 %tmp.11;
+        symbol [ text %text.3 80 12 16 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_25_81_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_else_false:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_81_15_83_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 82 12 ]
+        %tmp.12 = lgetv %cdLeft.2;
+        symbol [ cdLeft %tmp.12 82 19 25 ];
+        symbol [ toString %tmp.13 82 26 34 ];
+        %tmp.13 = getv function %tmp.12 :toString;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %text.3 %tmp.14;
+        symbol [ text %text.3 82 12 16 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_81_15_83_8_stop:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_79_8_83_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 85 8 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 85 8 10 ];
+        symbol [ setColor %tmp.16 85 11 19 ];
+        %tmp.16 = getv function %tmp.15 :setColor;
+        symbol [ Graphics %tmp.17 85 20 28 ];
+        %tmp.17 = getm $.Toybox.Graphics;
+        symbol [ COLOR_YELLOW %tmp.18 85 29 41 ];
+        %tmp.18 = getv %tmp.17 :COLOR_YELLOW;
+        symbol [ Graphics %tmp.19 85 43 51 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 85 52 69 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.15 %tmp.16(%tmp.18, %tmp.20);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 86 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 86 8 10 ];
+        symbol [ drawText %tmp.22 86 11 19 ];
+        %tmp.22 = getv function %tmp.21 :drawText;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 86 20 22 ];
+        %tmp.24 = lgetv %cy;
+        symbol [ cy %tmp.24 86 24 26 ];
+        %tmp.25 = 20;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        symbol [ Graphics %tmp.27 86 33 41 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.28 86 42 57 ];
+        %tmp.28 = getv %tmp.27 :FONT_NUMBER_HOT;
+        %tmp.29 = lgetv %text.3;
+        symbol [ text %tmp.29 86 59 63 ];
+        symbol [ Graphics %tmp.30 86 65 73 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.31 86 74 93 ];
+        %tmp.31 = getv %tmp.30 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.26, %tmp.28, %tmp.29, %tmp.31);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_73_81_87_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 91; @symbol_functiondef = [_drawRunning,91,20,32]; @symbol_param<0> = [dc,91,33,35]; @symbol_param<0>_type<0> = [Dc,91,39,41]; @symbol_param<1> = [cx,91,43,45]; @symbol_param<1>_type<0> = [Number,91,49,55]; @symbol_param<2> = [cy,91,57,59]; @symbol_param<2>_type<0> = [Number,91,63,69]; ]
+    protected
+    function _drawRunning(dc as Dc, cx as Number, cy as Number) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 92 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %mgr.1 = local;
+        symbol [ mgr %mgr.1 92 12 15 ];
+        symbol [ sessionMgr %tmp.2 92 18 28 ];
+        %tmp.2 = getv ? :sessionMgr;
+        lputv %mgr.1 %tmp.2;
+        symbol [ mgr %mgr.1 92 12 15 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 93 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_8_93_35_if_stmt:
+        %tmp.3 = lgetv %mgr.1;
+        symbol [ mgr %tmp.3 93 12 15 ];
+        %tmp.4 = null;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_8_93_35_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_8_93_35_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_25_93_35_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 93 27 ]
+        ret ?;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_25_93_35_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_8_93_35_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_93_8_93_35_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 95 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %elapsed.2 = local;
+        symbol [ elapsed %elapsed.2 95 12 19 ];
+        %tmp.6 = lgetv %mgr.1;
+        symbol [ mgr %tmp.6 95 22 25 ];
+        symbol [ elapsedMs %tmp.7 95 26 35 ];
+        %tmp.7 = getv %tmp.6 :elapsedMs;
+        lputv %elapsed.2 %tmp.7;
+        symbol [ elapsed %elapsed.2 95 12 19 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 96 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %secs.3 = local;
+        symbol [ secs %secs.3 96 12 16 ];
+        %tmp.8 = lgetv %elapsed.2;
+        symbol [ elapsed %tmp.8 96 19 26 ];
+        %tmp.9 = 1000;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %secs.3 %tmp.10;
+        symbol [ secs %secs.3 96 12 16 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 97 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %tenths.4 = local;
+        symbol [ tenths %tenths.4 97 12 18 ];
+        %tmp.11 = lgetv %elapsed.2;
+        symbol [ elapsed %tmp.11 97 22 29 ];
+        %tmp.12 = 1000;
+        %tmp.13 = mod %tmp.11 %tmp.12;
+        %tmp.14 = 100;
+        %tmp.15 = div %tmp.13 %tmp.14;
+        lputv %tenths.4 %tmp.15;
+        symbol [ tenths %tenths.4 97 12 18 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 100 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %timeStr.5 = local;
+        symbol [ timeStr %timeStr.5 100 12 19 ];
+        %tmp.16 = lgetv %secs.3;
+        symbol [ secs %tmp.16 100 22 26 ];
+        symbol [ toString %tmp.17 100 27 35 ];
+        %tmp.17 = getv function %tmp.16 :toString;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = ".";
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %tenths.4;
+        symbol [ tenths %tmp.21 100 46 52 ];
+        symbol [ toString %tmp.22 100 53 61 ];
+        %tmp.22 = getv function %tmp.21 :toString;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = add %tmp.20 %tmp.23;
+        lputv %timeStr.5 %tmp.24;
+        symbol [ timeStr %timeStr.5 100 12 19 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 101 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop" ]
+        %timeColor.6 = local;
+        symbol [ timeColor %timeColor.6 101 12 21 ];
+        symbol [ Graphics %tmp.25 101 24 32 ];
+        %tmp.25 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.26 101 33 44 ];
+        %tmp.26 = getv %tmp.25 :COLOR_WHITE;
+        lputv %timeColor.6 %tmp.26;
+        symbol [ timeColor %timeColor.6 101 12 21 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 102 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_stmt:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_12_102_37_begin:
+        symbol [ targetSec %tmp.28 102 12 21 ];
+        %tmp.28 = getv ? :targetSec;
+        %tmp.29 = 0;
+        %tmp.30 = gt %tmp.28 %tmp.29;
+        bf %tmp.30 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_29_102_37_true:
+        %tmp.31 = lgetv %secs.3;
+        symbol [ secs %tmp.31 102 29 33 ];
+        symbol [ targetSec %tmp.33 102 37 46 ];
+        %tmp.33 = getv ? :targetSec;
+        %tmp.34 = gte %tmp.31 %tmp.33;
+        push %tmp.34;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_29_102_37_end:
+        %tmp.35 = phi [%tmp.30 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_12_102_37_begin] [%tmp.34 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_29_102_37_true] [%tmp.35 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_29_102_37_end];
+        bf %tmp.35 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_48_104_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 103 12 ]
+        symbol [ Graphics %tmp.36 103 24 32 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ COLOR_GREEN %tmp.37 103 33 44 ];
+        %tmp.37 = getv %tmp.36 :COLOR_GREEN;
+        lputv %timeColor.6 %tmp.37;
+        symbol [ timeColor %timeColor.6 103 12 21 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_48_104_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_102_8_104_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 105 8 ]
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 105 8 10 ];
+        symbol [ setColor %tmp.39 105 11 19 ];
+        %tmp.39 = getv function %tmp.38 :setColor;
+        %tmp.40 = lgetv %timeColor.6;
+        symbol [ timeColor %tmp.40 105 20 29 ];
+        symbol [ Graphics %tmp.41 105 31 39 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.42 105 40 57 ];
+        %tmp.42 = getv %tmp.41 :COLOR_TRANSPARENT;
+        invoke %tmp.38 %tmp.39(%tmp.40, %tmp.42);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 106 8 ]
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 106 8 10 ];
+        symbol [ drawText %tmp.44 106 11 19 ];
+        %tmp.44 = getv function %tmp.43 :drawText;
+        %tmp.45 = lgetv %cx;
+        symbol [ cx %tmp.45 106 20 22 ];
+        %tmp.46 = lgetv %cy;
+        symbol [ cy %tmp.46 106 24 26 ];
+        %tmp.47 = 30;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        symbol [ Graphics %tmp.49 106 33 41 ];
+        %tmp.49 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.50 106 42 57 ];
+        %tmp.50 = getv %tmp.49 :FONT_NUMBER_HOT;
+        %tmp.51 = lgetv %timeStr.5;
+        symbol [ timeStr %tmp.51 106 59 66 ];
+        symbol [ Graphics %tmp.52 106 68 76 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.53 106 77 96 ];
+        %tmp.53 = getv %tmp.52 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.48, %tmp.50, %tmp.51, %tmp.53);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 109 8 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 109 8 10 ];
+        symbol [ setColor %tmp.55 109 11 19 ];
+        %tmp.55 = getv function %tmp.54 :setColor;
+        symbol [ Graphics %tmp.56 109 20 28 ];
+        %tmp.56 = getm $.Toybox.Graphics;
+        symbol [ COLOR_DK_GRAY %tmp.57 109 29 42 ];
+        %tmp.57 = getv %tmp.56 :COLOR_DK_GRAY;
+        symbol [ Graphics %tmp.58 109 44 52 ];
+        %tmp.58 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.59 109 53 70 ];
+        %tmp.59 = getv %tmp.58 :COLOR_TRANSPARENT;
+        invoke %tmp.54 %tmp.55(%tmp.57, %tmp.59);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 110 8 ]
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 110 8 10 ];
+        symbol [ drawText %tmp.61 110 11 19 ];
+        %tmp.61 = getv function %tmp.60 :drawText;
+        %tmp.62 = lgetv %cx;
+        symbol [ cx %tmp.62 110 20 22 ];
+        %tmp.63 = lgetv %cy;
+        symbol [ cy %tmp.63 110 24 26 ];
+        %tmp.64 = 30;
+        %tmp.65 = add %tmp.63 %tmp.64;
+        symbol [ Graphics %tmp.66 110 33 41 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.67 110 42 52 ];
+        %tmp.67 = getv %tmp.66 :FONT_XTINY;
+        %tmp.68 = "target: ";
+        symbol [ targetSec %tmp.70 110 67 76 ];
+        %tmp.70 = getv ? :targetSec;
+        symbol [ toString %tmp.71 110 77 85 ];
+        %tmp.71 = getv function %tmp.70 :toString;
+        %tmp.72 = invoke %tmp.70 %tmp.71();
+        %tmp.73 = add %tmp.68 %tmp.72;
+        %tmp.74 = "s";
+        %tmp.75 = add %tmp.73 %tmp.74;
+        symbol [ Graphics %tmp.76 110 95 103 ];
+        %tmp.76 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.77 110 104 123 ];
+        %tmp.77 = getv %tmp.76 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.65, %tmp.67, %tmp.75, %tmp.77);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 113 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 113 8 10 ];
+        symbol [ setColor %tmp.79 113 11 19 ];
+        %tmp.79 = getv function %tmp.78 :setColor;
+        symbol [ Graphics %tmp.80 113 20 28 ];
+        %tmp.80 = getm $.Toybox.Graphics;
+        symbol [ COLOR_RED %tmp.81 113 29 38 ];
+        %tmp.81 = getv %tmp.80 :COLOR_RED;
+        symbol [ Graphics %tmp.82 113 40 48 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.83 113 49 66 ];
+        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
+        invoke %tmp.78 %tmp.79(%tmp.81, %tmp.83);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 114 8 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 114 8 10 ];
+        symbol [ drawText %tmp.85 114 11 19 ];
+        %tmp.85 = getv function %tmp.84 :drawText;
+        %tmp.86 = lgetv %cx;
+        symbol [ cx %tmp.86 114 20 22 ];
+        %tmp.87 = lgetv %cy;
+        symbol [ cy %tmp.87 114 24 26 ];
+        %tmp.88 = 50;
+        %tmp.89 = add %tmp.87 %tmp.88;
+        symbol [ Graphics %tmp.90 114 33 41 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.91 114 42 51 ];
+        %tmp.91 = getv %tmp.90 :FONT_TINY;
+        %tmp.92 = "STOP";
+        symbol [ Graphics %tmp.93 114 61 69 ];
+        %tmp.93 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.94 114 70 89 ];
+        %tmp.94 = getv %tmp.93 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.84 %tmp.85(%tmp.86, %tmp.89, %tmp.91, %tmp.92, %tmp.94);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_91_79_115_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 119; @symbol_functiondef = [_drawDone,119,20,29]; @symbol_param<0> = [dc,119,30,32]; @symbol_param<0>_type<0> = [Dc,119,36,38]; @symbol_param<1> = [cx,119,40,42]; @symbol_param<1>_type<0> = [Number,119,46,52]; @symbol_param<2> = [cy,119,54,56]; @symbol_param<2>_type<0> = [Number,119,60,66]; ]
+    protected
+    function _drawDone(dc as Dc, cx as Number, cy as Number) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_119_76_122_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 120 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 120 8 10 ];
+        symbol [ setColor %tmp.2 120 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ Graphics %tmp.3 120 20 28 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ COLOR_GREEN %tmp.4 120 29 40 ];
+        %tmp.4 = getv %tmp.3 :COLOR_GREEN;
+        symbol [ Graphics %tmp.5 120 42 50 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.6 120 51 68 ];
+        %tmp.6 = getv %tmp.5 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 121 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 121 8 10 ];
+        symbol [ drawText %tmp.8 121 11 19 ];
+        %tmp.8 = getv function %tmp.7 :drawText;
+        %tmp.9 = lgetv %cx;
+        symbol [ cx %tmp.9 121 20 22 ];
+        %tmp.10 = lgetv %cy;
+        symbol [ cy %tmp.10 121 24 26 ];
+        %tmp.11 = 10;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        symbol [ Graphics %tmp.13 121 33 41 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.14 121 42 53 ];
+        %tmp.14 = getv %tmp.13 :FONT_MEDIUM;
+        %tmp.15 = "Saved!";
+        symbol [ Graphics %tmp.16 121 65 73 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.17 121 74 93 ];
+        %tmp.17 = getv %tmp.16 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.12, %tmp.14, %tmp.15, %tmp.17);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_119_76_122_4_stop:
+    }
+}
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 127; @symbol_classdef = [HangTrackerInputDelegate,127,6,30]; @symbol_extends<0> = [WatchUi,127,39,46]; @symbol_extends<1> = [BehaviorDelegate,127,47,63]; ]
+class HangTrackerInputDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 127; ]
+    <init> {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 127; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 129; @position = 15; @symbol_vardef = [_view,129,15,20]; @symbol_type<0> = [HangTrackerView,129,24,39]; ]
+    protected
+    var _view as HangTrackerView;
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 131; @symbol_functiondef = [initialize,131,13,23]; @symbol_param<0> = [view,131,24,28]; @symbol_param<0>_type<0> = [HangTrackerView,131,32,47]; ]
+    function initialize(view as HangTrackerView) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_131_49_134_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 132 8 ]
+        symbol [ BehaviorDelegate %tmp.2 132 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 132 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 133 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 133 16 20 ];
+        symbol [ _view ? 133 8 13 ];
+        putv self :_view %tmp.4;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_131_49_134_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 136; @symbol_functiondef = [onSelect,136,13,21]; @symbol_return<0> = [Boolean,136,27,34]; ]
+    function onSelect() as Boolean {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_136_35_154_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 137 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_136_35_154_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_136_35_154_4_stop" ]
+        %mgr.1 = local;
+        symbol [ mgr %mgr.1 137 12 15 ];
+        symbol [ sessionMgr %tmp.2 137 18 28 ];
+        %tmp.2 = getv ? :sessionMgr;
+        lputv %mgr.1 %tmp.2;
+        symbol [ mgr %mgr.1 137 12 15 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 138 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_8_138_41_if_stmt:
+        %tmp.3 = lgetv %mgr.1;
+        symbol [ mgr %tmp.3 138 12 15 ];
+        %tmp.4 = null;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_8_138_41_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_8_138_41_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_25_138_41_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 138 27 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_25_138_41_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_8_138_41_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_138_8_138_41_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 140 8 ]
+        symbol [ timerState %tmp.8 140 16 26 ];
+        %tmp.8 = getv ? :timerState;
+        push %tmp.8;
+        switch %tmp.8 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_switchStmtEnd;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_switchStmtBegin:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 141 12 ]
+        %tmp.9 = dup %tmp.8;
+        symbol [ STATE_IDLE %tmp.11 141 17 27 ];
+        %tmp.11 = getv ? :STATE_IDLE;
+        %tmp.12 = getv function %tmp.9 :equals;
+        %tmp.13 = invoke %tmp.9 %tmp.12 (%tmp.11);
+        bt %tmp.13 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_141_12_143_27_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 144 12 ]
+        %tmp.14 = dup %tmp.8;
+        symbol [ STATE_COUNTDOWN %tmp.16 144 17 32 ];
+        %tmp.16 = getv ? :STATE_COUNTDOWN;
+        %tmp.17 = getv function %tmp.14 :equals;
+        %tmp.18 = invoke %tmp.14 %tmp.17 (%tmp.16);
+        bt %tmp.18 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_144_12_146_27_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 147 12 ]
+        %tmp.19 = dup %tmp.8;
+        symbol [ STATE_RUNNING %tmp.21 147 17 30 ];
+        %tmp.21 = getv ? :STATE_RUNNING;
+        %tmp.22 = getv function %tmp.19 :equals;
+        %tmp.23 = invoke %tmp.19 %tmp.22 (%tmp.21);
+        bt %tmp.23 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_147_12_149_27_switchCase;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 150 12 ]
+        %tmp.24 = dup %tmp.8;
+        symbol [ STATE_DONE %tmp.26 150 17 27 ];
+        %tmp.26 = getv ? :STATE_DONE;
+        %tmp.27 = getv function %tmp.24 :equals;
+        %tmp.28 = invoke %tmp.24 %tmp.27 (%tmp.26);
+        bt %tmp.28 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_150_12_151_27_switchCase;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_switchStmtDefault:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_defaultCodeBegin;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_141_12_143_27_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 142 16 ]
+        %tmp.29 = lgetv %mgr.1;
+        symbol [ mgr %tmp.29 142 16 19 ];
+        symbol [ startHang %tmp.30 142 20 29 ];
+        %tmp.30 = getv function %tmp.29 :startHang;
+        invoke %tmp.29 %tmp.30();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 143 16 ]
+        %tmp.31 = true;
+        ret %tmp.31;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_144_12_146_27_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 145 16 ]
+        %tmp.32 = lgetv %mgr.1;
+        symbol [ mgr %tmp.32 145 16 19 ];
+        symbol [ cancel %tmp.33 145 20 26 ];
+        %tmp.33 = getv function %tmp.32 :cancel;
+        invoke %tmp.32 %tmp.33();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 146 16 ]
+        %tmp.34 = true;
+        ret %tmp.34;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_147_12_149_27_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 148 16 ]
+        %tmp.35 = lgetv %mgr.1;
+        symbol [ mgr %tmp.35 148 16 19 ];
+        symbol [ stopSession %tmp.36 148 20 31 ];
+        %tmp.36 = getv function %tmp.35 :stopSession;
+        invoke %tmp.35 %tmp.36();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 149 16 ]
+        %tmp.37 = true;
+        ret %tmp.37;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_150_12_151_27_switchCase:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 151 16 ]
+        %tmp.38 = true;
+        ret %tmp.38;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_defaultCodeBegin:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_140_8_152_8_switchStmtEnd:
+        pop;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 153 8 ]
+        %tmp.39 = false;
+        ret %tmp.39;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_136_35_154_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 157; @symbol_functiondef = [onPreviousPage,157,13,27]; @symbol_return<0> = [Boolean,157,33,40]; ]
+    function onPreviousPage() as Boolean {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_157_41_166_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 158 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_8_164_8_if_stmt:
+        symbol [ timerState %tmp.2 158 12 22 ];
+        %tmp.2 = getv ? :timerState;
+        symbol [ STATE_IDLE %tmp.4 158 26 36 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_8_164_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_8_164_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_38_164_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 159 12 ]
+        symbol [ targetSec %tmp.6 159 12 21 ];
+        %tmp.6 = getv self :targetSec;
+        %tmp.7 = 1;
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ targetSec ? 159 12 21 ];
+        putv self :targetSec dup %tmp.8;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 160 12 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_12_160_52_if_stmt:
+        symbol [ targetSec %tmp.10 160 16 25 ];
+        %tmp.10 = getv ? :targetSec;
+        %tmp.11 = 120;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_12_160_52_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_12_160_52_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_33_160_52_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 160 35 ]
+        %tmp.13 = 120;
+        symbol [ targetSec ? 160 35 44 ];
+        putv self :targetSec %tmp.13;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_33_160_52_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_12_160_52_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_160_12_160_52_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 161 12 ]
+        %tmp.14 = self;
+        symbol [ _persistAll %tmp.15 161 12 23 ];
+        %tmp.15 = getv function %tmp.14 :_persistAll;
+        invoke %tmp.14 %tmp.15();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 162 12 ]
+        symbol [ WatchUi %tmp.16 162 12 19 ];
+        %tmp.16 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.17 162 20 33 ];
+        %tmp.17 = getv function %tmp.16 :requestUpdate;
+        invoke %tmp.16 %tmp.17();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 163 12 ]
+        %tmp.18 = true;
+        ret %tmp.18;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_38_164_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_8_164_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_158_8_164_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 165 8 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_157_41_166_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 169; @symbol_functiondef = [onNextPage,169,13,23]; @symbol_return<0> = [Boolean,169,29,36]; ]
+    function onNextPage() as Boolean {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_169_37_178_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 170 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_8_176_8_if_stmt:
+        symbol [ timerState %tmp.2 170 12 22 ];
+        %tmp.2 = getv ? :timerState;
+        symbol [ STATE_IDLE %tmp.4 170 26 36 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_8_176_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_8_176_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_38_176_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 171 12 ]
+        symbol [ targetSec %tmp.6 171 12 21 ];
+        %tmp.6 = getv self :targetSec;
+        %tmp.7 = 1;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        symbol [ targetSec ? 171 12 21 ];
+        putv self :targetSec dup %tmp.8;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 172 12 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_12_172_48_if_stmt:
+        symbol [ targetSec %tmp.10 172 16 25 ];
+        %tmp.10 = getv ? :targetSec;
+        %tmp.11 = 1;
+        %tmp.12 = lt %tmp.10 %tmp.11;
+        bf %tmp.12 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_12_172_48_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_12_172_48_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_31_172_48_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 172 33 ]
+        %tmp.13 = 1;
+        symbol [ targetSec ? 172 33 42 ];
+        putv self :targetSec %tmp.13;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_31_172_48_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_12_172_48_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_172_12_172_48_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 173 12 ]
+        %tmp.14 = self;
+        symbol [ _persistAll %tmp.15 173 12 23 ];
+        %tmp.15 = getv function %tmp.14 :_persistAll;
+        invoke %tmp.14 %tmp.15();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 174 12 ]
+        symbol [ WatchUi %tmp.16 174 12 19 ];
+        %tmp.16 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.17 174 20 33 ];
+        %tmp.17 = getv function %tmp.16 :requestUpdate;
+        invoke %tmp.16 %tmp.17();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 175 12 ]
+        %tmp.18 = true;
+        ret %tmp.18;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_38_176_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_8_176_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_170_8_176_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 177 8 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_169_37_178_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 181; @symbol_functiondef = [onMenu,181,13,19]; @symbol_return<0> = [Boolean,181,25,32]; ]
+    function onMenu() as Boolean {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 182 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_8_182_54_if_stmt:
+        symbol [ timerState %tmp.2 182 12 22 ];
+        %tmp.2 = getv ? :timerState;
+        symbol [ STATE_IDLE %tmp.4 182 26 36 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_8_182_54_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_8_182_54_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_38_182_54_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 182 40 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_38_182_54_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_8_182_54_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_182_8_182_54_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 184 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_stop" ]
+        %menu.1 = local;
+        symbol [ menu %menu.1 184 12 16 ];
+        symbol [ WatchUi %tmp.9 184 23 30 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ Menu2 %tmp.10 184 31 36 ];
+        %tmp.10 = getv function ? %tmp.9 :Menu2;
+        %tmp.11 = newd 1;
+        %tmp.13 = const :title;
+        symbol [ title %tmp.13 184 39 44 const ];
+        %tmp.14 = "Hang Timer";
+        %tmp.15 = dup %tmp.11;
+        %tmp.16 = aputv %tmp.15 %tmp.13 %tmp.14;
+        %tmp.7 = newc %tmp.10 (%tmp.16);
+        lputv %menu.1 %tmp.7;
+        symbol [ menu %menu.1 184 12 16 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 186 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_stop" ]
+        %delayLabel.2 = local;
+        symbol [ delayLabel %delayLabel.2 186 12 22 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 187 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_stmt:
+        symbol [ delaySec %tmp.18 187 12 20 ];
+        %tmp.18 = getv ? :delaySec;
+        %tmp.19 = 0;
+        %tmp.20 = lte %tmp.18 %tmp.19;
+        bf %tmp.20 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_else_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_27_189_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 188 12 ]
+        %tmp.21 = "Delay: off";
+        lputv %delayLabel.2 %tmp.21;
+        symbol [ delayLabel %delayLabel.2 188 12 22 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_27_189_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_else_false:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_189_15_191_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 190 12 ]
+        %tmp.22 = "Delay: ";
+        symbol [ delaySec %tmp.24 190 37 45 ];
+        %tmp.24 = getv ? :delaySec;
+        symbol [ toString %tmp.25 190 46 54 ];
+        %tmp.25 = getv function %tmp.24 :toString;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = add %tmp.22 %tmp.26;
+        %tmp.28 = "s";
+        %tmp.29 = add %tmp.27 %tmp.28;
+        lputv %delayLabel.2 %tmp.29;
+        symbol [ delayLabel %delayLabel.2 190 12 22 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_189_15_191_8_stop:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_187_8_191_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 192 8 ]
+        %tmp.30 = lgetv %menu.1;
+        symbol [ menu %tmp.30 192 8 12 ];
+        symbol [ addItem %tmp.31 192 13 20 ];
+        %tmp.31 = getv function %tmp.30 :addItem;
+        symbol [ WatchUi %tmp.34 192 25 32 ];
+        %tmp.34 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.35 192 33 41 ];
+        %tmp.35 = getv function ? %tmp.34 :MenuItem;
+        %tmp.36 = lgetv %delayLabel.2;
+        symbol [ delayLabel %tmp.36 192 42 52 ];
+        %tmp.37 = "Cycle: 0/3/5/10";
+        %tmp.39 = const :delay;
+        symbol [ delay %tmp.39 192 74 79 const ];
+        %tmp.40 = newd 0;
+        %tmp.32 = newc %tmp.35 (%tmp.36, %tmp.37, %tmp.39, %tmp.40);
+        invoke %tmp.30 %tmp.31(%tmp.32);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 193 8 ]
+        %tmp.41 = lgetv %menu.1;
+        symbol [ menu %tmp.41 193 8 12 ];
+        symbol [ addItem %tmp.42 193 13 20 ];
+        %tmp.42 = getv function %tmp.41 :addItem;
+        symbol [ WatchUi %tmp.45 193 25 32 ];
+        %tmp.45 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.46 193 33 41 ];
+        %tmp.46 = getv function ? %tmp.45 :MenuItem;
+        %tmp.47 = "View Log";
+        symbol [ sessionLog %tmp.49 193 54 64 ];
+        %tmp.49 = getv ? :sessionLog;
+        symbol [ size %tmp.50 193 65 69 ];
+        %tmp.50 = getv function %tmp.49 :size;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        %tmp.52 = " sessions";
+        %tmp.53 = add %tmp.51 %tmp.52;
+        %tmp.55 = const :viewLog;
+        symbol [ viewLog %tmp.55 193 88 95 const ];
+        %tmp.56 = newd 0;
+        %tmp.43 = newc %tmp.46 (%tmp.47, %tmp.53, %tmp.55, %tmp.56);
+        invoke %tmp.41 %tmp.42(%tmp.43);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 194 8 ]
+        %tmp.57 = lgetv %menu.1;
+        symbol [ menu %tmp.57 194 8 12 ];
+        symbol [ addItem %tmp.58 194 13 20 ];
+        %tmp.58 = getv function %tmp.57 :addItem;
+        symbol [ WatchUi %tmp.61 194 25 32 ];
+        %tmp.61 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.62 194 33 41 ];
+        %tmp.62 = getv function ? %tmp.61 :MenuItem;
+        %tmp.63 = "Clear Log";
+        %tmp.64 = "Delete all entries";
+        %tmp.66 = const :clearLog;
+        symbol [ clearLog %tmp.66 194 78 86 const ];
+        %tmp.67 = newd 0;
+        %tmp.59 = newc %tmp.62 (%tmp.63, %tmp.64, %tmp.66, %tmp.67);
+        invoke %tmp.57 %tmp.58(%tmp.59);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 196 8 ]
+        symbol [ WatchUi %tmp.68 196 8 15 ];
+        %tmp.68 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.69 196 16 24 ];
+        %tmp.69 = getv function %tmp.68 :pushView;
+        %tmp.70 = lgetv %menu.1;
+        symbol [ menu %tmp.70 196 25 29 ];
+        symbol [ HangMenuDelegate %tmp.74 196 35 51 ];
+        %tmp.74 = getv ? :HangMenuDelegate;
+        %tmp.71 = newc %tmp.74 ();
+        symbol [ WatchUi %tmp.75 196 55 62 ];
+        %tmp.75 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.76 196 63 71 ];
+        %tmp.76 = getv %tmp.75 :SLIDE_UP;
+        invoke %tmp.68 %tmp.69(%tmp.70, %tmp.71, %tmp.76);
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 197 8 ]
+        %tmp.77 = true;
+        ret %tmp.77;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_181_33_198_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 200; @symbol_functiondef = [onBack,200,13,19]; @symbol_return<0> = [Boolean,200,25,32]; ]
+    function onBack() as Boolean {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_200_33_207_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 201 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_200_33_207_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_200_33_207_4_stop" ]
+        %mgr.1 = local;
+        symbol [ mgr %mgr.1 201 12 15 ];
+        symbol [ sessionMgr %tmp.2 201 18 28 ];
+        %tmp.2 = getv ? :sessionMgr;
+        lputv %mgr.1 %tmp.2;
+        symbol [ mgr %mgr.1 201 12 15 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 202 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_stmt:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_12_202_41_begin:
+        %tmp.3 = lgetv %mgr.1;
+        symbol [ mgr %tmp.3 202 12 15 ];
+        %tmp.4 = null;
+        %tmp.5 = ne %tmp.3 %tmp.4;
+        bf %tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_27_202_41_true:
+        symbol [ timerState %tmp.7 202 27 37 ];
+        %tmp.7 = getv ? :timerState;
+        symbol [ STATE_IDLE %tmp.9 202 41 51 ];
+        %tmp.9 = getv ? :STATE_IDLE;
+        %tmp.10 = ne %tmp.7 %tmp.9;
+        push %tmp.10;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_27_202_41_end:
+        %tmp.11 = phi [%tmp.5 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_12_202_41_begin] [%tmp.10 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_27_202_41_true] [%tmp.11 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_27_202_41_end];
+        bf %tmp.11 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_53_205_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 203 12 ]
+        %tmp.12 = lgetv %mgr.1;
+        symbol [ mgr %tmp.12 203 12 15 ];
+        %tmp.13 = as %tmp.12 { (!Null) };
+        symbol [ cancel %tmp.14 203 16 22 ];
+        %tmp.14 = getv function %tmp.13 :cancel;
+        invoke %tmp.13 %tmp.14();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 204 12 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_53_205_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_202_8_205_8_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 206 8 ]
+        %tmp.16 = false;
+        ret %tmp.16;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_200_33_207_4_stop:
+    }
+}
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 212; @symbol_classdef = [HangMenuDelegate,212,6,22]; @symbol_extends<0> = [WatchUi,212,31,38]; @symbol_extends<1> = [Menu2InputDelegate,212,39,57]; ]
+class HangMenuDelegate extends WatchUi.Menu2InputDelegate {
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 212; ]
+    <init> {
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 215 15 ]
+        %tmp.17 = newa 4;
+        %tmp.18 = 0;
+        %tmp.19 = dup %tmp.17;
+        %tmp.20 = aputv %tmp.19 0 %tmp.18;
+        %tmp.21 = 3;
+        %tmp.22 = dup %tmp.20;
+        %tmp.23 = aputv %tmp.22 1 %tmp.21;
+        %tmp.24 = 5;
+        %tmp.25 = dup %tmp.23;
+        %tmp.26 = aputv %tmp.25 2 %tmp.24;
+        %tmp.27 = 10;
+        %tmp.28 = dup %tmp.26;
+        %tmp.29 = aputv %tmp.28 3 %tmp.27;
+        putv self :_delayOptions %tmp.29;
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 212; ]
+    static
+    <init> {
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 215; @position = 15; @symbol_vardef = [_delayOptions,215,15,28]; @symbol_type<0> = [Array,215,32,37]; @symbol_type<1> = [Number,215,38,44]; ]
+    protected
+    var _delayOptions as Array<Number>;
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 217; @symbol_functiondef = [initialize,217,13,23]; ]
+    function initialize() as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_217_26_219_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 218 8 ]
+        symbol [ Menu2InputDelegate %tmp.2 218 8 26 ];
+        %tmp.2 = getv ? :Menu2InputDelegate;
+        symbol [ initialize %tmp.3 218 27 37 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_217_26_219_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 221; @symbol_functiondef = [onSelect,221,13,21]; @symbol_param<0> = [item,221,22,26]; @symbol_param<0>_type<0> = [WatchUi,221,30,37]; @symbol_param<0>_type<1> = [MenuItem,221,38,46]; ]
+    function onSelect(item as WatchUi.MenuItem) as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_221_56_256_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 222 8 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_221_56_256_4_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_221_56_256_4_stop" ]
+        %id.1 = local;
+        symbol [ id %id.1 222 12 14 ];
+        %tmp.1 = lgetv %item;
+        symbol [ item %tmp.1 222 17 21 ];
+        symbol [ getId %tmp.2 222 22 27 ];
+        %tmp.2 = getv function %tmp.1 :getId;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %id.1 %tmp.3;
+        symbol [ id %id.1 222 12 14 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 224 8 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_stmt:
+        %tmp.4 = lgetv %id.1;
+        symbol [ id %tmp.4 224 12 14 ];
+        %tmp.6 = const :delay;
+        symbol [ delay %tmp.6 224 19 24 const ];
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 226 12 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_stop" ]
+        %idx.2 = local;
+        symbol [ idx %idx.2 226 16 19 ];
+        %tmp.8 = 0;
+        lputv %idx.2 %tmp.8;
+        symbol [ idx %idx.2 226 16 19 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 227 12 ]
+        for @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_test @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_incr @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_init:
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_begin" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 227 21 22 ];
+        %tmp.9 = 0;
+        lputv %i.3 %tmp.9;
+        symbol [ i %i.3 227 21 22 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_test:
+        %tmp.10 = lgetv %i.3;
+        symbol [ i %tmp.10 227 28 29 ];
+        symbol [ _delayOptions %tmp.12 227 32 45 ];
+        %tmp.12 = getv ? :_delayOptions;
+        symbol [ size %tmp.13 227 46 50 ];
+        %tmp.13 = getv function %tmp.12 :size;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = lt %tmp.10 %tmp.14;
+        bf %tmp.15 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_begin:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_59_232_12_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 228 16 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_16_231_16_if_stmt:
+        symbol [ _delayOptions %tmp.17 228 20 33 ];
+        %tmp.17 = getv ? :_delayOptions;
+        %tmp.18 = lgetv %i.3;
+        symbol [ i %tmp.18 228 34 35 ];
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        symbol [ delaySec %tmp.21 228 40 48 ];
+        %tmp.21 = getv ? :delaySec;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        bf %tmp.22 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_16_231_16_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_16_231_16_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_50_231_16_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 229 20 ]
+        %tmp.23 = lgetv %i.3;
+        symbol [ i %tmp.23 229 26 27 ];
+        lputv %idx.2 %tmp.23;
+        symbol [ idx %idx.2 229 20 23 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 230 20 ]
+        goto break @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_50_231_16_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_16_231_16_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_228_16_231_16_if_end:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_59_232_12_stop:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_incr:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 227 ]
+        %tmp.26 = lgetv %i.3;
+        symbol [ i %tmp.26 227 54 55 ];
+        %tmp.27 = add %tmp.26 1;
+        lputv %i.3 %tmp.27;
+        symbol [ i %i.3 227 54 55 ];
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_test;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_227_12_232_12_for_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 233 12 ]
+        %tmp.28 = lgetv %idx.2;
+        symbol [ idx %tmp.28 233 19 22 ];
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        symbol [ _delayOptions %tmp.32 233 30 43 ];
+        %tmp.32 = getv ? :_delayOptions;
+        symbol [ size %tmp.33 233 44 48 ];
+        %tmp.33 = getv function %tmp.32 :size;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = mod %tmp.30 %tmp.34;
+        lputv %idx.2 %tmp.35;
+        symbol [ idx %idx.2 233 12 15 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 234 12 ]
+        symbol [ _delayOptions %tmp.37 234 23 36 ];
+        %tmp.37 = getv ? :_delayOptions;
+        %tmp.38 = lgetv %idx.2;
+        symbol [ idx %tmp.38 234 37 40 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        symbol [ delaySec ? 234 12 20 ];
+        putv self :delaySec %tmp.39;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 235 12 ]
+        %tmp.40 = self;
+        symbol [ _persistAll %tmp.41 235 12 23 ];
+        %tmp.41 = getv function %tmp.40 :_persistAll;
+        invoke %tmp.40 %tmp.41();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 238 12 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_stop" ]
+        %label.4 = local;
+        symbol [ label %label.4 238 16 21 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 239 12 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_stmt:
+        symbol [ delaySec %tmp.43 239 16 24 ];
+        %tmp.43 = getv ? :delaySec;
+        %tmp.44 = 0;
+        %tmp.45 = lte %tmp.43 %tmp.44;
+        bf %tmp.45 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_else_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_31_241_12_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 240 16 ]
+        %tmp.46 = "Delay: off";
+        lputv %label.4 %tmp.46;
+        symbol [ label %label.4 240 16 21 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_31_241_12_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_else_false:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_241_19_243_12_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 242 16 ]
+        %tmp.47 = "Delay: ";
+        symbol [ delaySec %tmp.49 242 36 44 ];
+        %tmp.49 = getv ? :delaySec;
+        symbol [ toString %tmp.50 242 45 53 ];
+        %tmp.50 = getv function %tmp.49 :toString;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        %tmp.52 = add %tmp.47 %tmp.51;
+        %tmp.53 = "s";
+        %tmp.54 = add %tmp.52 %tmp.53;
+        lputv %label.4 %tmp.54;
+        symbol [ label %label.4 242 16 21 ];
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_241_19_243_12_stop:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_239_12_243_12_if_end:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 244 12 ]
+        %tmp.55 = lgetv %item;
+        symbol [ item %tmp.55 244 12 16 ];
+        symbol [ setLabel %tmp.56 244 17 25 ];
+        %tmp.56 = getv function %tmp.55 :setLabel;
+        %tmp.57 = lgetv %label.4;
+        symbol [ label %tmp.57 244 26 31 ];
+        invoke %tmp.55 %tmp.56(%tmp.57);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_26_246_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_false:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 246 15 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_stmt:
+        %tmp.58 = lgetv %id.1;
+        symbol [ id %tmp.58 246 19 21 ];
+        %tmp.60 = const :viewLog;
+        symbol [ viewLog %tmp.60 246 26 33 const ];
+        %tmp.61 = eq %tmp.58 %tmp.60;
+        bf %tmp.61 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_false;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_35_251_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 248 12 ]
+        [ "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_35_251_8_start" "C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_35_251_8_stop" ]
+        %logView.5 = local;
+        symbol [ logView %logView.5 248 16 23 ];
+        symbol [ LogView %tmp.65 248 30 37 ];
+        %tmp.65 = getv ? :LogView;
+        %tmp.62 = newc %tmp.65 ();
+        lputv %logView.5 %tmp.62;
+        symbol [ logView %logView.5 248 16 23 ];
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 249 12 ]
+        symbol [ WatchUi %tmp.66 249 12 19 ];
+        %tmp.66 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.67 249 20 28 ];
+        %tmp.67 = getv function %tmp.66 :pushView;
+        %tmp.68 = lgetv %logView.5;
+        symbol [ logView %tmp.68 249 29 36 ];
+        symbol [ LogViewDelegate %tmp.72 249 42 57 ];
+        %tmp.72 = getv ? :LogViewDelegate;
+        %tmp.73 = lgetv %logView.5;
+        symbol [ logView %tmp.73 249 58 65 ];
+        %tmp.69 = newc %tmp.72 (%tmp.73);
+        symbol [ WatchUi %tmp.74 249 68 75 ];
+        %tmp.74 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.75 249 76 86 ];
+        %tmp.75 = getv %tmp.74 :SLIDE_LEFT;
+        invoke %tmp.66 %tmp.67(%tmp.68, %tmp.69, %tmp.75);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_35_251_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_false:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 251 15 ]
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_15_255_8_if_stmt:
+        %tmp.76 = lgetv %id.1;
+        symbol [ id %tmp.76 251 19 21 ];
+        %tmp.78 = const :clearLog;
+        symbol [ clearLog %tmp.78 251 26 34 const ];
+        %tmp.79 = eq %tmp.76 %tmp.78;
+        bf %tmp.79 @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_15_255_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_15_255_8_if_true:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_36_255_8_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 252 12 ]
+        %tmp.80 = newa 0 Array;
+        symbol [ Array %tmp.80 252 31 36 ];
+        symbol [ sessionLog ? 252 12 22 ];
+        putv self :sessionLog %tmp.80;
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 253 12 ]
+        %tmp.81 = self;
+        symbol [ _persistAll %tmp.82 253 12 23 ];
+        %tmp.82 = getv function %tmp.81 :_persistAll;
+        invoke %tmp.81 %tmp.82();
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 254 12 ]
+        %tmp.83 = lgetv %item;
+        symbol [ item %tmp.83 254 12 16 ];
+        symbol [ setSubLabel %tmp.84 254 17 28 ];
+        %tmp.84 = getv function %tmp.83 :setSubLabel;
+        %tmp.85 = "0 sessions";
+        invoke %tmp.83 %tmp.84(%tmp.85);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_36_255_8_stop:
+        goto @C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_15_255_8_if_end;
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_251_15_255_8_if_end:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_246_15_255_8_if_end:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_224_8_255_8_if_end:
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_221_56_256_4_stop:
+    }
+    [ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 258; @symbol_functiondef = [onBack,258,13,19]; ]
+    function onBack() as Void {
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_258_30_260_4_start:
+[ "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc" 259 8 ]
+        symbol [ WatchUi %tmp.1 259 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 259 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 259 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.4 259 32 42 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+C__Git_hang_tracker_HangTrackerWidget_source_HangTrackerView_mc_258_30_260_4_stop:
+    }
+}
+[ @file = "C:\Git\hang-tracker\HangTrackerWidget\source\HangTrackerView.mc"; @line = 1; ]
+<init> {
+}

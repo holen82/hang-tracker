@@ -22,7 +22,12 @@
       "WebFetch(domain:pursueperformance.com)",
       "WebFetch(domain:link.springer.com)",
       "WebFetch(domain:mtntactical.com)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(node:*)",
+      "Bash(find C:/Users/holen/AppData/Roaming/Garmin/ConnectIQ/Sdks/ -maxdepth 4 -type d -name *ample* -o -type d -name *comm* -o -type d -name *Comm*)",
+      "WebFetch(domain:developer.garmin.com)",
+      "WebFetch(domain:forums.garmin.com)",
+      "Bash(find C:/Users/holen/AppData/Roaming/Garmin/ConnectIQ/Sdks/connectiq-sdk-win-9.1.0-2026-03-09-6a872a80b/doc/docs -type f -name *.html)"
     ]
   }
 }
